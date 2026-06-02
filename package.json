@@ -1,0 +1,46 @@
+{
+  "name": "mamatabd-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@material-tailwind/html": "^3.0.0-beta.7",
+    "@studio-freight/lenis": "^1.0.42",
+    "@tiptap/extension-bullet-list": "^3.0.9",
+    "@tiptap/extension-code-block": "^3.0.9",
+    "@tiptap/extension-heading": "^3.0.9",
+    "@tiptap/extension-horizontal-rule": "^3.0.9",
+    "@tiptap/extension-list-item": "^3.0.9",
+    "@tiptap/extension-ordered-list": "^3.0.9",
+    "@tiptap/extension-underline": "^3.0.9",
+    "@tiptap/pm": "^3.0.9",
+    "@tiptap/react": "^3.0.9",
+    "@tiptap/starter-kit": "^3.0.9",
+    "axios": "^1.11.0",
+    "framer-motion": "^12.23.6",
+    "js-cookie": "^3.0.5",
+    "next": "15.4.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hot-toast": "^2.5.2",
+    "react-intersection-observer": "^9.16.0",
+    "react-select": "^5.10.2",
+    "swiper": "^11.2.10"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.1",
+    "tailwindcss": "^4"
+  }
+}
