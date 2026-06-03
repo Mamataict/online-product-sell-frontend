@@ -15,6 +15,9 @@ async function getRepo() {
       params: {
         session_id: Cookies.get("session_id"),
       },
+      headers: {
+        "Cache-Control": "no-store",
+      },
     });
 
     console.log("API Response", res.data);
@@ -25,6 +28,8 @@ async function getRepo() {
     return null;
   }
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const repo = await getRepo();
