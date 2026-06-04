@@ -14,6 +14,8 @@ export default function OrderForm({ order_data }) {
   const [address, setAddress] = useState("");
   const [shipping, setShipping] = useState(order_data?.delivery_fee?.[0]?.id || null);
 
+  const [button_pressed, setButtonPressed] = useState(false);
+
   const [err_msg, setErrMsg] = useState(null);
   const [success_msg, setSuccessMsg] = useState(null);
 
@@ -103,6 +105,9 @@ export default function OrderForm({ order_data }) {
   const total = subtotal + Number(shippingCost);
 
   const handleOrderConfirm = async () => {
+
+    
+
     if (cart.length === 0) {
       alert("Please select at least one product");
       return;
@@ -122,6 +127,8 @@ export default function OrderForm({ order_data }) {
       alert("Address is required");
       return;
     }
+
+    setButtonPressed(true);
 
     const payload = {
       customer: {
@@ -146,13 +153,16 @@ export default function OrderForm({ order_data }) {
       if (res.data.status == false) {
         toast.error(res.data.message);
         setErrMsg(res.data.message);
+        setButtonPressed(false);
       } else {
         setErrMsg(null);
         // setSuccessMsg(res.data.message);
         router.push(`/order/${res.data.route}`);
+    
       }
     } catch (error) {
       console.log(error);
+      setButtonPressed(false);
     }
   };
 
@@ -200,7 +210,7 @@ export default function OrderForm({ order_data }) {
 
               <div className="w-full">
                 <div className="font-semibold">
-                  {product.name} ({product.unit})
+                  {product.name} {product.unit} 
                 </div>
 
                 {product.available_qty < 5 && (
@@ -249,7 +259,13 @@ export default function OrderForm({ order_data }) {
                   <div className="text-lg font-bold text-[#0F6939]">
                     {Number(product.latest_price?.price || 0)} ৳
                   </div>
+
+                  
                 </div>
+
+                {product.instruction && (
+                    <span className="text-sm text-red-500"> * {product.instruction}</span>
+                  )}
               </div>
             </div>
           );
@@ -421,16 +437,17 @@ export default function OrderForm({ order_data }) {
                   cart.length === 0 ||
                   !name.trim() ||
                   !phone.trim() ||
-                  !address.trim()
+                  !address.trim() || button_pressed
                 }
-                className={`w-full transition font-bold text-xl py-4 mt-5 rounded-2xl flex justify-center items-center gap-3 ${
+                className={`w-full transition font-bold text-xl py-4 mt-5 rounded-2xl flex justify-center items-center gap-3 cursor-pointer ${
                   cart.length === 0 ||
                   !name.trim() ||
                   !phone.trim() ||
-                  !address.trim()
+                  !address.trim() || button_pressed
                     ? "bg-gray-300 cursor-not-allowed"
                     : "bg-yellow-400 hover:bg-yellow-500"
                 }`}
+
               >
                 <FontAwesomeIcon icon={faLock} />
                 অর্ডার কনফার্ম করুন {total} ৳

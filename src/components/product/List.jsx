@@ -22,6 +22,7 @@ export default function List({
               <th className="p-4 border-b border-gray-200">Name</th>
               <th className="p-4 border-b border-gray-200">Unit</th>
               <th className="p-4 border-b border-gray-200">Pricing</th>
+              <th className="p-4 border-b border-gray-200">View Order</th>
               <th className="p-4 border-b border-gray-200">Status</th>
               <th className="p-4 border-b border-gray-200">Actions</th>
             </tr>
@@ -40,6 +41,7 @@ export default function List({
                 <td className="p-4">{product.name}</td>
                 <td className="p-4">{product.unit}</td>
                 <td className="p-4">{product.prices.length}</td>
+                <td className="p-4">{product.view_order}</td>
                 <td className="p-4 ">
                   <a
                     href="#"

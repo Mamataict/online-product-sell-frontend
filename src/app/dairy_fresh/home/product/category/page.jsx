@@ -162,6 +162,7 @@ export default function ProductCategory() {
             <tr>
               <th className="p-4 border-b border-gray-200">Name</th>
               <th className="p-4 border-b border-gray-200">Products</th>
+              <th className="p-4 border-b border-gray-200">View Order</th>
               <th className="p-4 border-b border-gray-200">Status</th>
               <th className="p-4 border-b border-gray-200">Actions</th>
             </tr>
@@ -181,6 +182,10 @@ export default function ProductCategory() {
                     href={`/dairy_fresh/home/product/${product_category.id}`}
                     className="text-blue-600 hover:underline"
                   >{product_category.products.length}</Link>
+                </td>
+
+                <td className="p-4 border-b border-gray-200">
+                  {product_category.view_order}
                 </td>
                 <td className="p-4 border-b border-gray-200">
                   <a

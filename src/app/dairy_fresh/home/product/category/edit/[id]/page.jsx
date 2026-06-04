@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 
 export default function EditProductCategory() {
   const [name, setName] = useState("");
+  const [view_order, setViewOrder] = useState("");
   const [is_active, setIsActive] = useState(0);
   const [buttonPressed, setButtonPressed] = useState(false);
   const [error, setError] = useState("");
@@ -25,6 +26,7 @@ export default function EditProductCategory() {
         },
       });
       setName(res.data.data.name);
+      setViewOrder(res.data.data.view_order);
       setIsActive(res.data.data.is_active);
       setLoading(false);
     };
@@ -39,6 +41,7 @@ export default function EditProductCategory() {
 
     const formData = new FormData();
     formData.append("name", name);
+    formData.append("view_order", view_order);
     formData.append("is_active", is_active);
     formData.append("_method", "PUT");
 
@@ -93,6 +96,29 @@ export default function EditProductCategory() {
             {error?.errors?.name && (
               <div className="text-red-400 text-sm pt-1">
                 * {error.errors.name}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="view_order"
+              className="block font-medium text-gray-700 mb-1 text-lg"
+            >
+              View Order
+            </label>
+            <input
+              id="view_order"
+              type="number"
+              name="view_order"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              placeholder="Enter view order"
+              value={view_order || ""}
+              onChange={(e) => setViewOrder(e.target.value)}
+            />
+            {error?.errors?.view_order && (
+              <div className="text-red-400 text-sm pt-1">
+                * {error.errors.view_order}
               </div>
             )}
           </div>

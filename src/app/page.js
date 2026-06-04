@@ -20,7 +20,7 @@ async function getRepo() {
       },
     });
 
-    console.log("API Response", res.data);
+    console.log("API Response", res.data.data);
 
     return res.data;
   } catch (error) {
@@ -38,15 +38,20 @@ export default async function Home() {
 
   return (
     <div>
-
-      <div className="relative h-[650px] 2xl:h-[1500px] py-10 w-full">
-  <Image
-    src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/bg-cover.jpeg`}
-    alt="Dairy Fresh"
-    fill
-    className="object-cover"
-  />
-</div>
+      <div className="relative h-[650px] 2xl:h-[1000px] 3xl:h-[1500px] py-10 w-full">
+        <Image
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/milk-ghee.jpg`}
+          alt="Dairy Fresh"
+          fill
+          className="object-cover"
+        />
+        <Image
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/dairy_fresh_transparent.png`}
+          alt="Dairy Fresh"
+          fill
+          className="w-[200px] 2xl:w-[300px] 3xl:w-[400px] object-contain absolute"
+        />
+      </div>
       <div className="h-[450px] py-10 container mx-auto">
         <ProductAdCarousel order_data={repo?.data} />
       </div>

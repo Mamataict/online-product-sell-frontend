@@ -11,6 +11,8 @@ import { useParams, useRouter } from "next/navigation";
 export default function EditProduct() {
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
+  const [instruction, setInstruction] = useState("");
+  const [view_order, setViewOrder] = useState("");
   const [stock, setStock] = useState(0);
   const [available_stock, setAvailableStock] = useState(0);
   const [image, setImage] = useState(null);
@@ -39,8 +41,10 @@ export default function EditProduct() {
 
         setName(p.product.name ?? "");
         setUnit(p.product.unit ?? "");
+        setInstruction(p.product.instruction ?? "");
         setStock(p.product.stock ?? 0);
         setAvailableStock(p.product.available_qty ?? 0);
+        setViewOrder(p.product.view_order ?? "");
         setCategoryId(
           p.product.product_category_id ?? p.product.category?.id ?? "",
         );
@@ -124,6 +128,8 @@ export default function EditProduct() {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("unit", unit);
+      formData.append("instruction", instruction);
+      formData.append("view_order", view_order);
       formData.append("stock", stock);
       if (category_id !== "")
         formData.append("product_category_id", category_id);
@@ -211,6 +217,8 @@ export default function EditProduct() {
               </div>
             </div>
 
+
+
             <div>
               <label className="block mb-1 text-lg">Image</label>
               <input type="file" onChange={handleFileChange} />
@@ -239,6 +247,43 @@ export default function EditProduct() {
                 placeholder="Select Product Category"
                 isClearable
               />
+            </div>
+
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Instruction
+              </label>
+              <textarea
+                type="text"
+                value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
+                placeholder="Enter Product Instruction"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+              >
+              </textarea>
+              {error?.errors?.instruction && (
+                <p className="text-red-500 text-sm pt-1">
+                  * {error.errors.instruction}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                View Order
+              </label>
+              <input
+                type="text"
+                value={view_order}
+                onChange={(e) => setViewOrder(e.target.value)}
+                placeholder="Enter Product View Order"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+              />
+             
+              {error?.errors?.view_order && (
+                <p className="text-red-500 text-sm pt-1">
+                  * {error.errors.view_order}
+                </p>
+              )}
             </div>
 
             <div>

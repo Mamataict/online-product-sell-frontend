@@ -10,7 +10,7 @@ import "swiper/css/navigation";
 import "./styles.css";
 
 // import required modules
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import Image from "next/image";
 
 export default function ProductAdCarousel({ order_data }) {
@@ -18,10 +18,14 @@ export default function ProductAdCarousel({ order_data }) {
     <Swiper
       rewind={true}
       navigation={true}
-      modules={[Navigation]}
+      modules={[Navigation, Autoplay]}
       className="mySwiper"
       slidesPerView={3}
       spaceBetween={30}
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+      }}
       breakpoints={{
         0: {
           slidesPerView: 1,
@@ -41,7 +45,7 @@ export default function ProductAdCarousel({ order_data }) {
         },
       }}
     >
-      {order_data?.products?.map((product, index) => (
+      {order_data?.products_view?.map((product, index) => (
         <SwiperSlide key={index}>
           <div className="relative w-full h-full rounded-lg shadow-md">
             <Image

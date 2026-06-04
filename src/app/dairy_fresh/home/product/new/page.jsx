@@ -12,6 +12,8 @@ export default function CreateProduct() {
 
   const [stock, setStock] = useState(0);
   const [unit, setUnit] = useState("");
+  const [instruction, setInstruction] = useState("");
+  const [view_order, setViewOrder] = useState("");
 
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -88,6 +90,8 @@ export default function CreateProduct() {
       formData.append("name", name);
       formData.append("unit", unit);
       formData.append("stock", stock);
+      formData.append("instruction", instruction);
+      formData.append("view_order", view_order);
       formData.append("product_category_id", category_id);
       formData.append("is_active", is_active);
       if (image) formData.append("image", image);
@@ -181,6 +185,44 @@ export default function CreateProduct() {
               {error?.errors?.stock && (
                 <p className="text-red-500 text-sm pt-1">
                   * {error.errors.stock}
+                </p>
+              )}
+            </div>
+            
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Instruction
+              </label>
+              <textarea
+                type="text"
+                value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
+                placeholder="Enter Product Instruction"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+              >
+              </textarea>
+              {error?.errors?.instruction && (
+                <p className="text-red-500 text-sm pt-1">
+                  * {error.errors.instruction}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                View Order
+              </label>
+              <input
+                type="text"
+                value={view_order}
+                onChange={(e) => setViewOrder(e.target.value)}
+                placeholder="Enter Product View Order"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+              />
+             
+              {error?.errors?.view_order && (
+                <p className="text-red-500 text-sm pt-1">
+                  * {error.errors.view_order}
                 </p>
               )}
             </div>
