@@ -50,6 +50,10 @@ const FabButton = () => {
     setIsFabEnabled((prevState) => !prevState);
   }, []);
 
+  const messengerUrl = typeof window !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent)
+    ? 'fb-messenger://user-thread/61590328600208'
+    : 'https://m.me/61590328600208';
+
   return (
     // FAB button container
     <div className="bg-[#0F6939] z-999999 bg-primary h-16 w-16 rounded-full p-0.5 fixed bottom-5 right-5 flex items-center justify-center shadow-primary shadow-sm hover:shadow-md hover:shadow-primary cursor-pointer active:scale-95 transition-all ease-in">
@@ -145,9 +149,9 @@ const FabButton = () => {
 
             <motion.li variants={itemB} className="h-14 w-14 rounded-full">
               <Link
-                href="https://m.me/61590328600208"
-                target="_blank"
-                rel="noopener noreferrer"
+                 href={messengerUrl}
+    target="_blank"
+    rel="noopener noreferrer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
