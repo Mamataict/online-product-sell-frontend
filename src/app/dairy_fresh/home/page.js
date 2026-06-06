@@ -28,6 +28,9 @@ export default function AdminDashboard() {
     return permissionList.some((p) => user_data?.permissions?.includes(p));
   };
 
+  useEffect(() => {
+  if (!token) return;
+
   const fetchDashboardInfo = async () => {
     try {
       const res = await api.get("/api/dashboard", {
@@ -35,16 +38,14 @@ export default function AdminDashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       setData(res.data.data);
     } catch (err) {
       setError(err?.response?.data || "Failed to fetch dashboard info");
     }
   };
 
-  useEffect(() => {
-    fetchDashboardInfo();
-  }, []);
+  fetchDashboardInfo();
+}, [token]);
 
   return (
     <>
