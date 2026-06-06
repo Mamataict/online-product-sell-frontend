@@ -6,15 +6,11 @@ import FabButton from "@/components/front/FabButton";
 import OrderForm from "@/components/front/OrderForm";
 
 import api from "@/lib/axios";
-import Cookies from "js-cookie";
 import Image from "next/image";
 
 async function getRepo() {
   try {
     const res = await api.get("/api/home", {
-      params: {
-        session_id: Cookies.get("session_id"),
-      },
       headers: {
         "Cache-Control": "no-store",
       },
@@ -31,8 +27,6 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const repo = await getRepo();
-
-  Cookies.set("session_id", repo?.data?.session_id);
 
   return (
     <div>
@@ -51,7 +45,9 @@ export default async function Home() {
         />
       </div>
       <div className="h-[450px] my-15 container mx-auto">
-        <ProductAdCarousel order_data={repo?.data} />
+        {repo?.data?.status && (
+          <ProductAdCarousel order_data={repo?.data} />
+        )}
       </div>
 
       {/* <div className="h-[450px] py-10 container mx-auto">
@@ -66,7 +62,7 @@ export default async function Home() {
           নিচের ফর্মটি পূরণ করে আপনার অর্ডার নিশ্চিত করুন
         </div>
         <div className="border-2 border-[#0F6939] py-8 px-3 rounded-b-xl">
-          <OrderForm order_data={repo?.data} />
+          {repo?.data?.status && <OrderForm order_data={repo?.data} />}
         </div>
       </div>
 
