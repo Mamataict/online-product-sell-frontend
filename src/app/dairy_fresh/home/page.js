@@ -40,6 +40,7 @@ export default function AdminDashboard() {
       });
       setData(res.data.data);
     } catch (err) {
+      
       setError(err?.response?.data || "Failed to fetch dashboard info");
     }
   };

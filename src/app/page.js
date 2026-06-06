@@ -15,7 +15,7 @@ async function getRepo() {
         "Cache-Control": "no-store",
       },
     });
-
+    console.log("API Response:", res.data.status);
     return res.data;
   } catch (error) {
     console.log("API Error", error?.response?.data || error.message);
@@ -45,9 +45,9 @@ export default async function Home() {
         />
       </div>
       <div className="h-[450px] my-15 container mx-auto">
-        {repo?.data?.status && (
+     
           <ProductAdCarousel order_data={repo?.data} />
-        )}
+        
       </div>
 
       {/* <div className="h-[450px] py-10 container mx-auto">
@@ -62,7 +62,7 @@ export default async function Home() {
           নিচের ফর্মটি পূরণ করে আপনার অর্ডার নিশ্চিত করুন
         </div>
         <div className="border-2 border-[#0F6939] py-8 px-3 rounded-b-xl">
-          {repo?.data?.status && <OrderForm order_data={repo?.data} />}
+          <OrderForm order_data={repo?.data} />
         </div>
       </div>
 

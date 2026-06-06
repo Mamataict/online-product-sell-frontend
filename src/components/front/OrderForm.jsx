@@ -152,7 +152,7 @@ export default function OrderForm({ order_data }) {
       } else {
         setErrMsg(null);
         // setSuccessMsg(res.data.message);
-        router.push(`/order/${res.data.route}`);
+        router.push(`/order/${res?.data?.route ?? ""}`);
     
       }
     } catch (error) {
@@ -196,7 +196,7 @@ export default function OrderForm({ order_data }) {
               </div>
 
               <Image
-                src={product.image_url}
+                src={product.image_url || "images/default.png"}
                 alt={product.name}
                 className="rounded-xl h-20 w-20 object-cover"
                 width={100}
