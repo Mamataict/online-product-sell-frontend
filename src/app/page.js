@@ -50,7 +50,7 @@ export default async function Home() {
           className="w-[200px] 2xl:w-[300px] 3xl:w-[400px] object-contain absolute"
         />
       </div>
-      <div className="h-[450px] py-10 container mx-auto">
+      <div className="h-[450px] my-15 container mx-auto">
         <ProductAdCarousel order_data={repo?.data} />
       </div>
 
