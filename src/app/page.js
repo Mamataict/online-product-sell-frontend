@@ -20,8 +20,6 @@ async function getRepo() {
       },
     });
 
-    console.log("API Response", res.data.data);
-
     return res.data;
   } catch (error) {
     console.log("API Error", error?.response?.data || error.message);

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "POS",
+  title: "Dairy Fresh",
   description: "Product Sale Management System",
 };
 
