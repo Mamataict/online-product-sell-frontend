@@ -13,8 +13,6 @@ export default function EditProduct() {
   const [unit, setUnit] = useState("");
   const [instruction, setInstruction] = useState("");
   const [view_order, setViewOrder] = useState("");
-  const [stock, setStock] = useState(0);
-  const [available_stock, setAvailableStock] = useState(0);
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [category_id, setCategoryId] = useState("");
@@ -42,8 +40,6 @@ export default function EditProduct() {
         setName(p.product.name ?? "");
         setUnit(p.product.unit ?? "");
         setInstruction(p.product.instruction ?? "");
-        setStock(p.product.stock ?? 0);
-        setAvailableStock(p.product.available_qty ?? 0);
         setViewOrder(p.product.view_order ?? "");
         setCategoryId(
           p.product.product_category_id ?? p.product.category?.id ?? "",
@@ -130,7 +126,6 @@ export default function EditProduct() {
       formData.append("unit", unit);
       formData.append("instruction", instruction);
       formData.append("view_order", view_order);
-      formData.append("stock", stock);
       if (category_id !== "")
         formData.append("product_category_id", category_id);
 
@@ -200,24 +195,6 @@ export default function EditProduct() {
                 className="w-full border px-3 py-2 rounded"
               />
             </div>
-
-            <div>
-              <label className="block mb-1 text-lg">Stock</label>
-              <input
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 text-lg">Available Stock</label>
-              <div className="text-md mb-1 border-2 border-gray-300 rounded px-3 py-2">
-                {available_stock}
-              </div>
-            </div>
-
-
 
             <div>
               <label className="block mb-1 text-lg">Image</label>

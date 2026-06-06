@@ -9,8 +9,6 @@ import CheckBox from "@/components/features_cus/CheckBox";
 
 export default function CreateProduct() {
   const [name, setName] = useState("");
-
-  const [stock, setStock] = useState(0);
   const [unit, setUnit] = useState("");
   const [instruction, setInstruction] = useState("");
   const [view_order, setViewOrder] = useState("");
@@ -89,7 +87,6 @@ export default function CreateProduct() {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("unit", unit);
-      formData.append("stock", stock);
       formData.append("instruction", instruction);
       formData.append("view_order", view_order);
       formData.append("product_category_id", category_id);
@@ -167,24 +164,6 @@ export default function CreateProduct() {
               {error?.errors?.unit && (
                 <p className="text-red-500 text-sm pt-1">
                   * {error.errors.unit}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-medium text-gray-700 mb-1 text-lg">
-                Stock
-              </label>
-              <input
-                type="text"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                placeholder="Enter Product Stock"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-              />
-              {error?.errors?.stock && (
-                <p className="text-red-500 text-sm pt-1">
-                  * {error.errors.stock}
                 </p>
               )}
             </div>
