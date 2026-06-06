@@ -46,7 +46,6 @@ export default function OrderForm({ order_data }) {
           image: product.image_url,
           price: Number(product.latest_price?.price || 0),
           qty: 1,
-          available_qty: product.available_qty || 0,
         },
       };
     });
@@ -57,10 +56,6 @@ export default function OrderForm({ order_data }) {
       const item = prev[productId];
 
       if (!item) return prev;
-
-      if (item.qty >= item.available_qty) {
-        return prev;
-      }
 
       return {
         ...prev,
@@ -212,12 +207,6 @@ export default function OrderForm({ order_data }) {
                 <div className="font-semibold">
                   {product.name} {product.unit} 
                 </div>
-
-                {product.available_qty < 5 && (
-                  <div className="text-sm mt-1 text-red-500">
-                    Limited stock! Hurry up!
-                  </div>
-                )}
 
                 <div className="flex items-center justify-between mt-3">
                   {selected ? (
