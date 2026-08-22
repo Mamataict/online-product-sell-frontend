@@ -352,6 +352,9 @@ export default function OrderForm({ order_data }) {
                 <FontAwesomeIcon className="text-green-700" icon={faCheckCircle}/> Cash on delivery (COD)
                 </div>
               </div>
+              {isDisabled && <div className="w-full rounded-2xl border-2 py-4 px-5 mt-5 border-red-600 bg-red-100">
+                বিলিং ডিটেইলস সেকশনে আপনার নাম, মোবাইল নম্বর ও ঠিকানা প্রদান করুন।
+                </div>}
               <button
                 onClick={handleOrderConfirm}
                 disabled={isDisabled}
