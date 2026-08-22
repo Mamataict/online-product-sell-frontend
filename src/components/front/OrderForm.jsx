@@ -24,7 +24,7 @@ export default function OrderForm({ order_data }) {
   });
 
   const [shipping, setShipping] = useState(
-    order_data?.delivery_fee?.[0]?.id || null
+    order_data?.delivery_fee?.[0]?.id || null,
   );
   const [cartItems, setCartItems] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -83,20 +83,14 @@ export default function OrderForm({ order_data }) {
 
   const subtotal = useMemo(
     () => cart.reduce((acc, item) => acc + item.price * item.qty, 0),
-    [cart]
+    [cart],
   );
 
   const total = subtotal + Number(shippingCost);
 
-  const isDisabled =
-    submitting ||
-    cart.length === 0 ||
-    !form.name.trim() ||
-    !form.phone.trim() ||
-    !form.address.trim();
-
   const handleOrderConfirm = async () => {
-    if (cart.length === 0) return toast.error("Please select at least one product");
+    if (cart.length === 0)
+      return toast.error("Please select at least one product");
     if (!form.name.trim()) return toast.error("Name is required");
     if (!form.phone.trim()) return toast.error("Phone number is required");
     if (!form.address.trim()) return toast.error("Address is required");
@@ -341,28 +335,22 @@ export default function OrderForm({ order_data }) {
                   <span>{total} ৳</span>
                 </div>
               </div>
-              
-              <div className="border-dotted rounded-2xl py-4">
-                <div className="text-xl font-semibold">
-                  Payment Method
-                </div>
-                <hr/>
-                <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4">
 
-                <FontAwesomeIcon className="text-green-700" icon={faCheckCircle}/> Cash on delivery (COD)
+              <div className="border-dotted rounded-2xl py-4">
+                <div className="text-xl font-semibold">Payment Method</div>
+                <hr />
+                <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4">
+                  <FontAwesomeIcon
+                    className="text-green-700"
+                    icon={faCheckCircle}
+                  />{" "}
+                  Cash on delivery (COD)
                 </div>
               </div>
-              {isDisabled && <div className="w-full rounded-2xl border-2 py-4 px-5 mt-5 border-red-600 bg-red-100">
-                বিলিং ডিটেইলস সেকশনে আপনার নাম, মোবাইল নম্বর ও ঠিকানা প্রদান করুন।
-                </div>}
+
               <button
                 onClick={handleOrderConfirm}
-                disabled={isDisabled}
-                className={`w-full transition font-bold text-xl py-4 mt-5 rounded-2xl flex justify-center items-center gap-3 ${
-                  isDisabled
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-yellow-400 hover:bg-yellow-500 cursor-pointer"
-                }`}
+                className={`w-full transition font-bold text-xl py-4 mt-5 rounded-2xl flex justify-center items-center gap-3 ${"bg-yellow-400 hover:bg-yellow-500 cursor-pointer"}`}
               >
                 <FontAwesomeIcon icon={faLock} />
                 {submitting
