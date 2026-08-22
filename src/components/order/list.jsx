@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Receipt from "./Reciept";
 import DetailsModal from "./DetailsModal";
+import PermissionGuard from "../dashboard/PermissionGuard";
 
 export default function List({
   orders,
@@ -26,7 +27,7 @@ export default function List({
   fetchOrders,
   order,
   cancelOrder,
-  hasPermission,
+ 
   handlePrint,
   handlePrintInvoiceReport,
   total_income,
@@ -115,7 +116,7 @@ export default function List({
                 <td className="p-4 border-b border-gray-200">
                   <div className="flex gap-2">
                     {/* <Link
-                      href={`/dairy_fresh/home/order/${order.id}`}
+                      href={`/dashboard/order/${order.id}`}
                       className="text-blue-600 hover:underline"
                     >
                       Details
@@ -155,17 +156,17 @@ export default function List({
                         |
                       </>
                     )} */}
-                    {hasPermission(["order.update"]) && (
+                    <PermissionGuard permission={"order.update"}>
                       <>
                         <Link
-                          href={`/dairy_fresh/home/order/new?order_id=${order.id}&&order_type=edit`}
+                          href={`/dashboard/order/new?order_id=${order.id}&&order_type=edit`}
                           className=" text-blue-600 cursor-pointer hover:underline"
                         >
                           <FontAwesomeIcon icon={faEdit} />
                         </Link>
                         |
                       </>
-                    )}
+                    </PermissionGuard>
                     <a
                       href="#"
                       role="button"

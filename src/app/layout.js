@@ -20,9 +20,6 @@ export const metadata = {
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import Footer from "@/components/Footer";
-import SmoothScrollProvider from "@/components/features_cus/SmoothScrollProvider";
-import { AuthProvider } from "@/context/auth-context";
 
 config.autoAddCss = false;
 
@@ -32,13 +29,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <SmoothScrollProvider> */}
-        <AuthProvider>
 
           {children}
           <Toaster position="top-center" />
-        </AuthProvider>
-        {/* </SmoothScrollProvider> */}
+      
       </body>
     </html>
   );

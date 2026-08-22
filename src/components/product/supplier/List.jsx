@@ -56,7 +56,7 @@ export default function List({
                 <td className=" p-4 border-b border-gray-200">
                   <div className="flex gap-2">
                     <Link
-                      href={`/dairy_fresh/home/product/supplier/edit/${supplier.id}`}
+                      href={`/dashboard/product/supplier/edit/${supplier.id}`}
                       className="text-blue-600 hover:underline"
                     >
                       Edit

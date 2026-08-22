@@ -1,11 +1,12 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
-  baseURL: apiUrl,
-  withCredentials: true, 
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 export default api;

@@ -28,7 +28,6 @@ export default function List({
   setOrderId,
   order,
   cancelOrder,
-  hasPermission,
   handlePrint,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -157,7 +156,7 @@ export default function List({
                       </>
                     )}
                     <Link
-                      href={`/dairy_fresh/home/order/new?order_id=${order.id}&&order_type=edit`}
+                      href={`/dashboard/order/new?order_id=${order.id}&&order_type=edit`}
                       className=" text-blue-600 cursor-pointer hover:underline"
                     >
                       <FontAwesomeIcon icon={faEdit} />

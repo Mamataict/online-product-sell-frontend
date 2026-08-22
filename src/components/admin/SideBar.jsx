@@ -5,26 +5,23 @@ import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { AuthContext } from "@/context/auth-context";
+import { useAuth } from "@/hooks/useAuth";
 
 const SideBar = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [openSubMenu, setOpenSubMenu] = useState(null);
-  const { user_data } = useContext(AuthContext);
+  const { user_data, hasPermission, hasAnyPermission, logout, loading } = useAuth();
 
   const toggleMenu = (menuName) => {
     setOpenMenu(openMenu === menuName ? null : menuName);
-    setOpenSubMenu(null); // reset sub menu when parent changes
+    setOpenSubMenu(null);
   };
 
   const toggleSubMenu = (menuName) => {
     setOpenSubMenu(openSubMenu === menuName ? null : menuName);
   };
 
-  const hasPermission = (permissionList) => {
-    if (!user_data?.permissions) return false;
-    return permissionList.some((p) => user_data.permissions.includes(p));
-  };
+  if (loading) return null;
 
   const arrowClass = (menu) =>
     `transition-transform duration-300 ${
@@ -38,7 +35,7 @@ const SideBar = () => {
   return (
     <aside className="hidden lg:flex w-[280px] justify-center text-gray-700 h-full">
       <div className="w-[90%] shadow-xl text-xl rounded-[2rem] my-[70px] min-h-[490px] py-2 bg-white overflow-hidden">
-        {/* Logo */}
+       
         <div className="h-[100px] flex justify-center items-center">
           <Link href="/">
             <Image
@@ -51,16 +48,14 @@ const SideBar = () => {
           </Link>
         </div>
 
-        {/* Dashboard */}
         <Link
-          href="/dairy_fresh/home"
+          href="/dashboard"
           className="block px-4 py-3 admin-sidebar-menu rounded mb-2"
         >
           Dashboard
         </Link>
 
-        {/* Role */}
-        {hasPermission(["role.index", "role.store"]) && (
+        {hasAnyPermission(["role.index", "role.store"]) && (
           <div>
             <button
               onClick={() => toggleMenu("roles")}
@@ -75,17 +70,17 @@ const SideBar = () => {
 
             {openMenu === "roles" && (
               <div className="pl-6 space-y-1 mt-2">
-                {hasPermission(["role.index"]) && (
+                {hasPermission("role.index") && (
                   <Link
-                    href="/dairy_fresh/home/role"
+                    href="/dashboard/role"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     All Roles
                   </Link>
                 )}
-                {hasPermission(["role.store"]) && (
+                {hasPermission("role.store") && (
                   <Link
-                    href="/dairy_fresh/home/role/new"
+                    href="/dashboard/role/new"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     Add Role
@@ -96,8 +91,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Permission */}
-        {hasPermission(["permission.index", "permission.store"]) && (
+        {hasAnyPermission(["permission.index", "permission.store"]) && (
           <div>
             <button
               onClick={() => toggleMenu("permission")}
@@ -112,17 +106,17 @@ const SideBar = () => {
 
             {openMenu === "permission" && (
               <div className="pl-6 space-y-1 mt-2">
-                {hasPermission(["permission.index"]) && (
+                {hasPermission("permission.index") && (
                   <Link
-                    href="/dairy_fresh/home/permission"
+                    href="/dashboard/permission"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     All Permissions
                   </Link>
                 )}
-                {hasPermission(["permission.store"]) && (
+                {hasPermission("permission.store") && (
                   <Link
-                    href="/dairy_fresh/home/permission/new"
+                    href="/dashboard/permission/new"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     Add Permission
@@ -133,8 +127,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* User */}
-        {hasPermission(["user.index", "user.store"]) && (
+        {hasAnyPermission(["user.index", "user.store"]) && (
           <div>
             <button
               onClick={() => toggleMenu("user")}
@@ -149,17 +142,17 @@ const SideBar = () => {
 
             {openMenu === "user" && (
               <div className="pl-6 space-y-1 mt-2">
-                {hasPermission(["user.index"]) && (
+                {hasPermission("user.index") && (
                   <Link
-                    href="/dairy_fresh/home/user"
+                    href="/dashboard/user"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     All User
                   </Link>
                 )}
-                {hasPermission(["user.store"]) && (
+                {hasPermission("user.store") && (
                   <Link
-                    href="/dairy_fresh/home/user/new"
+                    href="/dashboard/user/new"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     Add User
@@ -170,8 +163,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Product */}
-        {hasPermission([
+        {hasAnyPermission([
           "product_category.index",
           "product.index",
           "supplier.index",
@@ -190,25 +182,25 @@ const SideBar = () => {
 
             {openMenu === "product" && (
               <div className="pl-6 space-y-1 mt-2">
-                {hasPermission(["product_category.index"]) && (
+                {hasPermission("product_category.index") && (
                   <Link
-                    href="/dairy_fresh/home/product/category"
+                    href="/dashboard/product/category"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     Product Category
                   </Link>
                 )}
-                {hasPermission(["product.index"]) && (
+                {hasPermission("product.index") && (
                   <Link
-                    href="/dairy_fresh/home/product"
+                    href="/dashboard/product"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     Product
                   </Link>
                 )}
-                {hasPermission(["supplier.index"]) && (
+                {hasPermission("supplier.index") && (
                   <Link
-                    href="/dairy_fresh/home/product/supplier"
+                    href="/dashboard/product/supplier"
                     className="block px-2 py-2 admin-sidebar-menu rounded"
                   >
                     Supplier
@@ -219,8 +211,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Branch */}
-        {hasPermission(["branch.index", "branch.store.index"]) && (
+        {hasAnyPermission(["branch.index", "branch.store.index"]) && (
           <div>
             <button
               onClick={() => toggleMenu("branch")}
@@ -236,13 +227,13 @@ const SideBar = () => {
             {openMenu === "branch" && (
               <div className="pl-6 space-y-1 mt-2">
                 <Link
-                  href="/dairy_fresh/home/branch"
+                  href="/dashboard/branch"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Branch Info
                 </Link>
                 <Link
-                  href="/dairy_fresh/home/branch/store"
+                  href="/dashboard/branch/store"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Store
@@ -252,8 +243,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Campaign */}
-        {hasPermission(["campaign.index"]) && (
+        {hasAnyPermission(["campaign.index"]) && (
           <div>
             <button
               onClick={() => toggleMenu("campaign")}
@@ -269,7 +259,7 @@ const SideBar = () => {
             {openMenu === "campaign" && (
               <div className="pl-6 space-y-1 mt-2">
                 <Link
-                  href="/dairy_fresh/home/campaign"
+                  href="/dashboard/campaign"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Campaign Info
@@ -279,8 +269,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Payment Info */}
-        {hasPermission(["payment_type.index"]) && (
+        {hasAnyPermission(["payment_type.index"]) && (
           <div>
             <button
               onClick={() => toggleMenu("payment_info")}
@@ -296,13 +285,13 @@ const SideBar = () => {
             {openMenu === "payment_info" && (
               <div className="pl-6 space-y-1 mt-2">
                 <Link
-                  href="/dairy_fresh/home/payment_info/type"
+                  href="/dashboard/payment_info/type"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Type
                 </Link>
                 <Link
-                  href="/dairy_fresh/home/payment_info"
+                  href="/dashboard/payment_info"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Type Info
@@ -312,8 +301,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Sale */}
-        {hasPermission(["order.index", "order.store"]) && (
+        {hasAnyPermission(["order.index", "order.store"]) && (
           <div>
             <button
               onClick={() => toggleMenu("order")}
@@ -329,25 +317,25 @@ const SideBar = () => {
             {openMenu === "order" && (
               <div className="pl-6 space-y-1 mt-2">
                 <Link
-                  href="/dairy_fresh/home/order"
+                  href="/dashboard/order"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Sale Info
                 </Link>
                 {/* <Link
-                  href="/dairy_fresh/home/order/product"
+                  href="/dashboard/order/product"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Product Sale Info
                 </Link>
                 <Link
-                  href="/dairy_fresh/home/customer"
+                  href="/dashboard/customer"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Customer
                 </Link>
                 <Link
-                  href="/dairy_fresh/home/order/new"
+                  href="/dashboard/order/new"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Sale Create
@@ -357,7 +345,7 @@ const SideBar = () => {
             )}
           </div>
         )}
-        {hasPermission(["delivery_fee.index", "delivery_fee.store"]) && (
+        {hasAnyPermission(["delivery_fee.index", "delivery_fee.store"]) && (
           <div>
             <button
               onClick={() => toggleMenu("delivery_fee")}
@@ -373,25 +361,25 @@ const SideBar = () => {
             {openMenu === "delivery_fee" && (
               <div className="pl-6 space-y-1 mt-2">
                 <Link
-                  href="/dairy_fresh/home/delivery_fee"
+                  href="/dashboard/delivery_fee"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Delivery Fee
                 </Link>
                 {/* <Link
-                  href="/dairy_fresh/home/order/product"
+                  href="/dashboard/order/product"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Product Sale Info
                 </Link>
                 <Link
-                  href="/dairy_fresh/home/customer"
+                  href="/dashboard/customer"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Customer
                 </Link>
                 <Link
-                  href="/dairy_fresh/home/order/new"
+                  href="/dashboard/order/new"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Sale Create
@@ -402,8 +390,7 @@ const SideBar = () => {
           </div>
         )}
 
-        {/* Report */}
-        {hasPermission(["order.due.report"]) && (
+        {hasAnyPermission(["order.due.report"]) && (
           <div>
             <button
               onClick={() => toggleMenu("order_due_report")}
@@ -419,14 +406,14 @@ const SideBar = () => {
             {openMenu === "order_due_report" && (
               <div className="pl-6 space-y-1 mt-2">
                 <Link
-                  href="/dairy_fresh/home/report/due"
+                  href="/dashboard/report/due"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Due Report
                 </Link>
 
                 <Link
-                  href="/dairy_fresh/home/report/discount"
+                  href="/dashboard/report/discount"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Discount Report
@@ -447,19 +434,19 @@ const SideBar = () => {
                   {openSubMenu === "customer_due_report" && (
                     <div className="pl-6 space-y-1 mt-2">
                       <Link
-                        href="/dairy_fresh/home/report/customer/transaction"
+                        href="/dashboard/report/customer/transaction"
                         className="block px-2 py-2 admin-sidebar-menu rounded"
                       >
                         Transaction Report
                       </Link>
                       <Link
-                        href="/dairy_fresh/home/report/customer/due"
+                        href="/dashboard/report/customer/due"
                         className="block px-2 py-2 admin-sidebar-menu rounded"
                       >
                         Due Report
                       </Link>
                       <Link
-                        href="/dairy_fresh/home/report/customer/discount"
+                        href="/dashboard/report/customer/discount"
                         className="block px-2 py-2 admin-sidebar-menu rounded"
                       >
                         Discount Report

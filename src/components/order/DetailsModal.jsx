@@ -99,8 +99,8 @@ export default function DetailsModal({
         {/* Amount Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
           {[
-            { label: "Subtotal Amount", value: order?.subtotal },
-            { label: "Delivery Fee", value: order?.delivery_fee },
+            { label: "Subtotal Amount", value: order?.subtotal ?? 0  },
+            { label: "Delivery Fee", value: order?.delivery_fee ?? 0 },
             { label: "Grand Total", value: order?.grand_total ?? 0 },
           ].map((item, idx) => (
             <div
@@ -135,12 +135,12 @@ export default function DetailsModal({
                 {order?.orders?.map((item) => (
                   <tr key={item.id} className="border-t hover:bg-gray-50">
                     <td className="p-3 font-medium text-gray-800">
-                      {item.product.name}
+                      {item.product?.name}
                     </td>
 
-                    <td className="p-3 text-center">{item.product.unit}</td>
+                    <td className="p-3 text-center">{item.product?.unit}</td>
                     <td className="p-3 text-center">৳ {item.price}</td>
-                    <td className="p-3 text-center">{item.qty}</td>
+                    <td className="p-3 text-center">{item.qty ?? 0}</td>
                   </tr>
                 ))}
               </tbody>

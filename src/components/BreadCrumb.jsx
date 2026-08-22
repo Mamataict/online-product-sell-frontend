@@ -19,13 +19,13 @@ export default function Breadcrumb() {
     <div className="text-xl text-gray-700 py-2">
       <ol className="list-reset flex">
         <li>
-          <Link href="/dairy_fresh/home" className="text-blue-600 hover:underline">
+          <Link href="/dashboard" className="text-blue-600 hover:underline">
             Home
           </Link>
         </li>
         {crumbs.map((crumb, idx) => {
           const cleanName = crumb.name.replace(/-/g, " ");
-          if (cleanName === "dairy_fresh" || cleanName === "home" || !isNaN(cleanName)) return null;
+          if (cleanName === "dashboard" || !isNaN(cleanName)) return null;
 
           return (
             <li key={idx} className="flex items-center">

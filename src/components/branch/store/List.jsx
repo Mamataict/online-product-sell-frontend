@@ -53,7 +53,7 @@ export default function List({
                 <td className=" p-4 border-b border-gray-200">
                   <div className="flex gap-2">
                     <Link
-                      href={`/dairy_fresh/home/branch/store/edit/${branch.id}`}
+                      href={`/dashboard/branch/store/edit/${branch.id}`}
                       className="text-blue-600 hover:underline"
                     >
                       Edit

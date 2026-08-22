@@ -51,8 +51,8 @@ const FabButton = () => {
   }, []);
 
   const messengerUrl = typeof window !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent)
-    ? 'fb-messenger://user-thread/61590328600208'
-    : 'https://m.me/61590328600208';
+    ? 'fb-messenger://user-thread/1175530528986599'
+    : 'https://m.me/1175530528986599';
 
   return (
     // FAB button container

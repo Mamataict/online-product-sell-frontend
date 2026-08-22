@@ -46,7 +46,7 @@ export default function List({
                     <div>{details?.product_prices?.length}</div>
                     <Link
                       className="text-blue-600 hover:underline "
-                      href={`/dairy_fresh/home/campaign/${details?.campaign?.id}/details/${details?.campaign?.id}/branch`}
+                      href={`/dashboard/campaign/${details?.campaign?.id}/details/${details?.campaign?.id}/branch`}
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </Link>
@@ -57,7 +57,7 @@ export default function List({
                     <div>{details?.branches?.length}</div>
                     <Link
                       className="text-blue-600 hover:underline "
-                      href={`/dairy_fresh/home/campaign/${details?.campaign?.id}/details/${details?.id}/branch`}
+                      href={`/dashboard/campaign/${details?.campaign?.id}/details/${details?.id}/branch`}
                     >
                       <FontAwesomeIcon icon={faEdit} />
                     </Link>
@@ -86,7 +86,7 @@ export default function List({
                 <td className=" p-4 border-b border-gray-200">
                   <div className="flex gap-2">
                     <Link
-                      href={`/dairy_fresh/home/campaign/details/edit/${details.id}`}
+                      href={`/dashboard/campaign/details/edit/${details.id}`}
                       className="text-blue-600 hover:underline"
                     >
                       Edit
