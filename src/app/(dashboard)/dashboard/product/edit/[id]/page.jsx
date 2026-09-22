@@ -16,6 +16,7 @@ export default function EditProduct() {
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [category_id, setCategoryId] = useState("");
+  const [is_special_delivery, setIsSpecialDelivery] = useState(0);
   const [is_active, setIsActive] = useState(0);
   const [product_categories, setProductCategories] = useState([]);
   const [error, setError] = useState("");
@@ -46,6 +47,7 @@ export default function EditProduct() {
         );
 
         setIsActive(p.product.is_active ? 1 : 0);
+        setIsSpecialDelivery(p.product.special_delivery ? 1 : 0);
         setPreviewUrl(p.product.image_url ?? "");
         setProductCategories(p.product_categories || []);
 
@@ -130,6 +132,7 @@ export default function EditProduct() {
         formData.append("product_category_id", category_id);
 
       formData.append("is_active", is_active);
+      formData.append("is_sepial_delivery", is_special_delivery);
 
       if (image) formData.append("image", image);
 
@@ -139,6 +142,7 @@ export default function EditProduct() {
         formData.append(`prices[${index}][price_id]`, group.id ?? "");
         formData.append(`prices[${index}][price]`, group.price ?? "");
         formData.append(`prices[${index}][is_active]`, group.is_active);
+        
 
         formData.append(
           `prices[${index}][effect_date]`,
@@ -236,8 +240,7 @@ export default function EditProduct() {
                 onChange={(e) => setInstruction(e.target.value)}
                 placeholder="Enter Product Instruction"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-              >
-              </textarea>
+              ></textarea>
               {error?.errors?.instruction && (
                 <p className="text-red-500 text-sm pt-1">
                   * {error.errors.instruction}
@@ -255,10 +258,30 @@ export default function EditProduct() {
                 placeholder="Enter Product View Order"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
               />
-             
+
               {error?.errors?.view_order && (
                 <p className="text-red-500 text-sm pt-1">
                   * {error.errors.view_order}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Special Delivery
+              </label>
+              <label className="inline-flex items-center space-x-2 cursor-pointer">
+                <CheckBox
+                  checked={is_special_delivery}
+                  onChange={(e) =>
+                    setIsSpecialDelivery(e.target.checked ? 1 : 0)
+                  }
+                />
+                <span>{is_special_delivery ? "Yes" : "No"}</span>
+              </label>
+              {error?.errors?.is_active && (
+                <p className="text-red-500 text-sm pt-1">
+                  * {error.errors.is_active}
                 </p>
               )}
             </div>

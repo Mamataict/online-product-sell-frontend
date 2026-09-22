@@ -20,6 +20,8 @@ export const metadata = {
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import FabButton from "@/components/front/FabButton";
+import Footer from "@/components/Footer";
 
 config.autoAddCss = false;
 

@@ -28,12 +28,24 @@ export default function OrderForm({ order_data }) {
   );
   const [cartItems, setCartItems] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [prev_item_category, setPrevItemCategory] = useState("");
 
   const shippingCost =
     order_data?.delivery_fee?.find((fee) => fee.id === shipping)
       ?.delivery_charge || 0;
 
-  const toggleProduct = (product) => {
+  const toggleProduct = (product, item_type) => {
+    if(item_type == 'special_delivery'){
+      setShipping(0);
+    }else{
+      setShipping(order_data?.delivery_fee?.[0]?.id || null);
+    }
+    if (item_type != prev_item_category) {
+      setCartItems({});
+    }
+
+    setPrevItemCategory(item_type);
+
     setCartItems((prev) => {
       if (prev[product.id]) {
         const updated = { ...prev };
@@ -48,6 +60,7 @@ export default function OrderForm({ order_data }) {
           unit: product.unit,
           image: product.image_url,
           price: Number(product.latest_price?.price || 0),
+
           qty: 1,
         },
       };
@@ -149,76 +162,158 @@ export default function OrderForm({ order_data }) {
         {products.map((product) => {
           const selected = cartItems[product.id];
           return (
-            <div
-              key={product.id}
-              className={`rounded-2xl flex space-x-3 shadow-md p-5 border-2 transition cursor-pointer ${
-                selected ? "border-green-500 bg-green-50" : "border-transparent"
-              }`}
-              onClick={() => toggleProduct(product)}
-            >
-              <div className="pt-2">
-                <input type="checkbox" checked={!!selected} readOnly />
-              </div>
+            <div key={product.id}>
+              {product.special_delivery ? (
+                <div
+                  className={`rounded-2xl flex space-x-3 shadow-md p-5 border-2 transition cursor-pointer ${
+                    selected
+                      ? "border-green-500 bg-green-50"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => toggleProduct(product, "special_delivery")}
+                >
+                  <div className="pt-2">
+                    <input type="checkbox" checked={!!selected} readOnly />
+                  </div>
 
-              <Image
-                src={product.image_url || DEFAULT_IMAGE}
-                alt={product.name}
-                className="rounded-xl h-20 w-20 object-cover"
-                width={100}
-                height={100}
-              />
+                  <Image
+                    src={product.image_url || DEFAULT_IMAGE}
+                    alt={product.name}
+                    className="rounded-xl h-20 w-20 object-cover"
+                    width={100}
+                    height={100}
+                  />
 
-              <div className="w-full">
-                <div className="font-semibold">
-                  {product.name} {product.unit}
-                </div>
-
-                <div className="flex items-center justify-between mt-3">
-                  {selected ? (
-                    <div
-                      className="flex items-center border rounded-xl overflow-hidden"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          decreaseQty(product.id);
-                        }}
-                        className="px-3 py-2 bg-gray-100 hover:bg-gray-200"
-                      >
-                        −
-                      </button>
-                      <input
-                        type="text"
-                        value={selected.qty}
-                        readOnly
-                        className="w-12 text-center outline-none"
-                      />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          increaseQty(product.id);
-                        }}
-                        className="px-3 py-2 bg-gray-100 hover:bg-gray-200"
-                      >
-                        +
-                      </button>
+                  <div className="w-full">
+                    <div className="font-semibold">
+                      {product.name} {product.unit}
                     </div>
-                  ) : (
-                    <div className="text-sm text-gray-400">Select Product</div>
-                  )}
 
-                  <div className="text-lg font-bold text-[#0F6939]">
-                    {Number(product.latest_price?.price || 0)} ৳
+                    <div className="flex items-center justify-between mt-3">
+                      {selected ? (
+                        <div
+                          className="flex items-center border rounded-xl overflow-hidden"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              decreaseQty(product.id);
+                            }}
+                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200"
+                          >
+                            −
+                          </button>
+                          <input
+                            type="text"
+                            value={selected.qty}
+                            readOnly
+                            className="w-12 text-center outline-none"
+                          />
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              increaseQty(product.id);
+                            }}
+                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200"
+                          >
+                            +
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-400">
+                          Select Product
+                        </div>
+                      )}
+
+                      <div className="text-lg font-bold text-[#0F6939]">
+                        {Number(product.latest_price?.price || 0)} ৳
+                      </div>
+                    </div>
+
+                    {product.instruction && (
+                      <span className="text-sm text-red-500">
+                        * {product.instruction}
+                      </span>
+                    )}
                   </div>
                 </div>
+              ) : (
+                <div
+                  className={`rounded-2xl flex space-x-3 shadow-md p-5 border-2 transition cursor-pointer ${
+                    selected
+                      ? "border-green-500 bg-green-50"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => toggleProduct(product, "")}
+                >
+                  <div className="pt-2">
+                    <input type="checkbox" checked={!!selected} readOnly />
+                  </div>
 
-                {product.instruction && (
-                  <span className="text-sm text-red-500">
-                    * {product.instruction}
-                  </span>
-                )}
-              </div>
+                  <Image
+                    src={product.image_url || DEFAULT_IMAGE}
+                    alt={product.name}
+                    className="rounded-xl h-20 w-20 object-cover"
+                    width={100}
+                    height={100}
+                  />
+
+                  <div className="w-full">
+                    <div className="font-semibold">
+                      {product.name} {product.unit}
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3">
+                      {selected ? (
+                        <div
+                          className="flex items-center border rounded-xl overflow-hidden"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              decreaseQty(product.id);
+                            }}
+                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200"
+                          >
+                            −
+                          </button>
+                          <input
+                            type="text"
+                            value={selected.qty}
+                            readOnly
+                            className="w-12 text-center outline-none"
+                          />
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              increaseQty(product.id);
+                            }}
+                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200"
+                          >
+                            +
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-400">
+                          Select Product
+                        </div>
+                      )}
+
+                      <div className="text-lg font-bold text-[#0F6939]">
+                        {Number(product.latest_price?.price || 0)} ৳
+                      </div>
+                    </div>
+
+                    {product.instruction && (
+                      <span className="text-sm text-red-500">
+                        * {product.instruction}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
@@ -263,28 +358,43 @@ export default function OrderForm({ order_data }) {
 
           <div className="text-2xl py-4 font-semibold">Shipping</div>
           <div className="space-y-3">
-            {order_data?.delivery_fee?.map((option) => (
+            {prev_item_category == "special_delivery" ? (
               <div
-                key={option.id}
-                onClick={() => setShipping(option.id)}
-                className={`flex justify-between p-4 rounded-2xl border-2 cursor-pointer ${
-                  shipping === option.id
-                    ? "border-green-500 bg-green-50"
-                    : "border-gray-300"
-                }`}
+                className={`flex justify-between p-4 rounded-2xl border-2 cursor-pointer 
+                  "border-green-500 bg-green-50"
+                `}
               >
-                <label className="cursor-pointer">
-                  <input
-                    type="radio"
-                    checked={shipping === option.id}
-                    onChange={() => setShipping(option.id)}
-                    className="mr-2"
-                  />
-                  {option.info}
-                </label>
-                <div className="font-semibold">{option.delivery_charge} ৳</div>
+                <label className="cursor-pointer">Free Delivery</label>
+                <div className="font-semibold">0 ৳</div>
               </div>
-            ))}
+            ) : (
+              <>
+                {order_data?.delivery_fee?.map((option) => (
+                  <div
+                    key={option.id}
+                    onClick={() => setShipping(option.id)}
+                    className={`flex justify-between p-4 rounded-2xl border-2 cursor-pointer ${
+                      shipping === option.id
+                        ? "border-green-500 bg-green-50"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <label className="cursor-pointer">
+                      <input
+                        type="radio"
+                        checked={shipping === option.id}
+                        onChange={() => setShipping(option.id)}
+                        className="mr-2"
+                      />
+                      {option.info}
+                    </label>
+                    <div className="font-semibold">
+                      {option.delivery_charge} ৳
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
 

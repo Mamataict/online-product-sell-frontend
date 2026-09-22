@@ -10,6 +10,11 @@ const status = {
   4: "Cancelled",
 };
 
+const payment_status = {
+  1: "Due",
+  2: "Paid",
+};
+
 export default function DetailsModal({
   setIsModalOpen,
   order,
@@ -27,7 +32,29 @@ export default function DetailsModal({
         `/api/order/${orderId}/status`,
         {
           status: status,
-    
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success(res.data.message);
+      fetchOrder(orderId);
+      fetchOrders(1);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to cancel order");
+    }
+  };
+  const orderPaymentStatusChange = async (orderId, status) => {
+    if (Number(status) === Number(order.payment_status)) return;
+
+    try {
+      const res = await api.put(
+        `/api/order/${orderId}/payment/status`,
+        {
+          payment_status: status,
         },
         {
           headers: {
@@ -214,6 +241,20 @@ export default function DetailsModal({
                 value={key}
                 checked={Number(key) == Number(order.status)}
                 onChange={() => orderStatusChange(order.id, key)}
+              />
+              <div>{value}</div>
+            </div>
+          ))}
+        </section>
+        <section className="sm:flex gap-2 p-6">
+          {Object.entries(payment_status).map(([key, value]) => (
+            <div className="flex gap-2" key={key}>
+              <input
+                type="radio"
+                name="payment_status"
+                value={key}
+                checked={Number(key) == Number(order.payment_status)}
+                onChange={() => orderPaymentStatusChange(order.id, key)}
               />
               <div>{value}</div>
             </div>

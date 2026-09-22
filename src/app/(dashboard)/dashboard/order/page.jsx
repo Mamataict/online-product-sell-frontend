@@ -46,14 +46,13 @@ export default function OrdersInfo() {
   const [order_info_id, setOrderInfoId] = useState("");
   const [cus_phone, setCusPhoneNumber] = useState("");
   const [orderStatus, setOrderStatus] = useState(1);
+  const [orderPaymentStatus, setOrderPaymentStatus] = useState(1);
 
   const fetchOrders = async (page = 1) => {
     setLoading(true);
     try {
       const res = await api.get(
-        `/api/order?page=${page} &&  
-        start_date=${start_date} && 
-        end_date=${end_date} && order_id=${order_info_id} && cus_phone=${cus_phone} && order_status=${orderStatus}`,
+        `/api/order?page=${page}&&start_date=${start_date}&&end_date=${end_date}&&order_id=${order_info_id}&&cus_phone=${cus_phone}&&order_status=${orderStatus}&&order_payment_status=${orderPaymentStatus}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -116,6 +115,26 @@ export default function OrdersInfo() {
       toast.error(err?.response?.data?.message || "Failed to cancel order");
     }
   };
+  const deleteOrder = async (id) => {
+    const confirmed = window.confirm("Are you sure?");
+    if (!confirmed) return;
+
+    try {
+      const res = await api.delete(
+        `/api/order/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success(res.data.message);
+      fetchOrders(currentPage);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to delete order");
+    }
+  };
 
   const orderStatusOptions = [
     { value: 1, label: "Pending" },
@@ -123,11 +142,14 @@ export default function OrdersInfo() {
     { value: 3, label: "Delivered" },
     { value: 4, label: "Cancelled" },
   ];
+  const orderPaymentStatusOptions = [
+    { value: 1, label: "Due" },
+    { value: 2, label: "Paid" },
+  ];
 
   const total_income = orders.reduce((sum, order) => sum + Number(order.grand_total), 0);
   const total_delivery_fee = orders.reduce((sum, order) => sum + Number(order.delivery_fee), 0);
   const total_subtotal = orders.reduce((sum, order) => sum + Number(order.subtotal), 0);
-
 
   return (
     <div className="space-y-5">
@@ -259,7 +281,7 @@ export default function OrdersInfo() {
       <div className="max-w-6xl p-4 bg-white rounded-md shadow-md">
         <div>
           <div className="flex">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <input
                 id="search"
                 type="date"
@@ -312,6 +334,17 @@ export default function OrdersInfo() {
                 placeholder="Select Order Status"
                 isClearable
               />
+              <Select
+                options={orderPaymentStatusOptions}
+                value={
+                  orderPaymentStatusOptions.find(
+                    (opt) => opt.value === orderPaymentStatus,
+                  ) || ""
+                }
+                onChange={(selected) => setOrderPaymentStatus(selected?.value || "")}
+                placeholder="Select Order Payment Status"
+                isClearable
+              />
 
               <button
                 onClick={() => fetchOrders(1)}
@@ -356,6 +389,7 @@ export default function OrdersInfo() {
           fetchOrders={fetchOrders}
           order={order}
           cancelOrder={cancelOrder}
+          deleteOrder={deleteOrder}
           total_income={total_income}
           total_delivery_fee={total_delivery_fee}
           total_subtotal={total_subtotal}

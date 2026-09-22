@@ -1,3 +1,4 @@
+import FrontAdModal from "@/components/advertisement/FrontAdModal";
 import ProductAdCarousel from "@/components/features_cus/ProductAdCarousel/ProductAdCarousel";
 import Footer from "@/components/Footer";
 import FabButton from "@/components/front/FabButton";
@@ -44,6 +45,16 @@ export default async function Home() {
         <ProductAdCarousel order_data={data} />
       </section>
 
+      <section className="container mx-auto my-15 h-[750px] flex justify-center items-center">
+        <Image
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/bdb89f9a-15c3-4af0-9068-13abf3f95fd8.jfif`}
+          width={1200}
+          height={800}
+          className=" w-auto h-full object-contain rounded-lg shadow-2xl"
+          alt="Beef"
+        />
+      </section>
+
       {/* Order Form */}
       <section className="container mx-auto py-10">
         <h2 className="bg-[#0F6939] text-white text-center text-2xl font-bold py-5 rounded-t-xl">
@@ -53,7 +64,7 @@ export default async function Home() {
           <OrderForm order_data={data} />
         </div>
       </section>
-
+      <FrontAdModal />
       <FabButton />
       <Footer />
     </main>

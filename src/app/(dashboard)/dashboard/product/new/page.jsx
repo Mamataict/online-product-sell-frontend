@@ -18,6 +18,7 @@ export default function CreateProduct() {
   
   const [category_id, setCategoryId] = useState("");
   const [is_active, setIsActive] = useState(0);
+  const [is_special_delivery, setIsSpecialDelivery] = useState(0);
   const [product_create_elements, setProductCreateElements] = useState([]);
   const [error, setError] = useState("");
   const [buttonPressed, setButtonPressed] = useState(false);
@@ -90,6 +91,7 @@ export default function CreateProduct() {
       formData.append("instruction", instruction);
       formData.append("view_order", view_order);
       formData.append("product_category_id", category_id);
+      formData.append("is_sepial_delivery", is_special_delivery);
       formData.append("is_active", is_active);
       if (image) formData.append("image", image);
 
@@ -250,6 +252,24 @@ export default function CreateProduct() {
               {error?.errors?.product_category_id && (
                 <p className="text-red-500 text-sm pt-1">
                   * {error.errors.product_category_id}
+                </p>
+              )}
+            </div>
+
+             <div>
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Special Delivery
+              </label>
+              <label className="inline-flex items-center space-x-2 cursor-pointer">
+                <CheckBox
+                  checked={is_special_delivery}
+                  onChange={(e) => setIsSpecialDelivery(e.target.checked ? 1 : 0)}
+                />
+                <span>{is_special_delivery ? "Yes" : "No"}</span>
+              </label>
+              {error?.errors?.is_active && (
+                <p className="text-red-500 text-sm pt-1">
+                  * {error.errors.is_active}
                 </p>
               )}
             </div>

@@ -27,7 +27,7 @@ export default function List({
   fetchOrders,
   order,
   cancelOrder,
- 
+  deleteOrder,
   handlePrint,
   handlePrintInvoiceReport,
   total_income,
@@ -50,14 +50,14 @@ export default function List({
               <th className="p-4 border-b border-gray-200">
                 Customer Phone Number
               </th>
-              <th className="p-4 border-b border-gray-200">
-                Place Date
-              </th>
+              <th className="p-4 border-b border-gray-200">Place Date</th>
 
               <th className="p-4 border-b border-gray-200">Subtotal</th>
               <th className="p-4 border-b border-gray-200">Delivery Fee</th>
               <th className="p-4 border-b border-gray-200">Grand Total</th>
-              
+
+              <th className="p-4 border-b border-gray-200">Payment Status</th>
+
               <th className="p-4 border-b border-gray-200">Handler</th>
 
               <th className="p-4 border-b border-gray-200">Actions</th>
@@ -104,13 +104,22 @@ export default function List({
                   {order.grand_total}
                 </td>
 
+                <td
+                  className={`p-4 border-b border-gray-200 ${
+                    order.payment_status == 1
+                      ? "text-amber-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {order.payment_status_text}
+                </td>
+
                 <td className="p-4 border-b border-gray-200">
                   {order.handler && (
                     <>
-                    {order.handler?.name} ({order.handler?.username})
+                      {order.handler?.name} ({order.handler?.username})
                     </>
                   )}
-                  
                 </td>
 
                 <td className="p-4 border-b border-gray-200">
@@ -122,7 +131,7 @@ export default function List({
                       Details
                     </Link> */}
                     {/* | */}
-                    {/* {order.payment_status === "completed" && (
+                    {order.status === "completed" && (
                       <>
                         <div className="flex items-center gap-2">
                           <button
@@ -139,7 +148,7 @@ export default function List({
                             title="Print Invoice Report"
                           >
                             <FontAwesomeIcon icon={faPrint} />
-                          </button> */}
+                          </button>
                           {/* {hasPermission(["order.cancel"]) && (
                             <>
                               <span className="text-gray-400">|</span>
@@ -152,10 +161,10 @@ export default function List({
                               </button>
                             </>
                           )} */}
-                        {/* </div>
+                        </div>
                         |
                       </>
-                    )} */}
+                    )}
                     <PermissionGuard permission={"order.update"}>
                       <>
                         <Link
@@ -167,6 +176,7 @@ export default function List({
                         |
                       </>
                     </PermissionGuard>
+
                     <a
                       href="#"
                       role="button"
@@ -179,22 +189,42 @@ export default function List({
                     >
                       <FontAwesomeIcon icon={faList} />
                     </a>
+
+                    <PermissionGuard permission={"order.destroy"}>
+                      <>
+                        <span className="text-gray-400">|</span>
+                        <button
+                          onClick={() => deleteOrder(order.id)}
+                          className="text-red-600 cursor-pointer"
+                          title="Remove Order"
+                        >
+                          <FontAwesomeIcon icon={faRemove} />
+                        </button>
+                        
+                      </>
+                    </PermissionGuard>
                   </div>
                 </td>
               </tr>
             ))}
-
-           
           </tbody>
 
-            <tfoot>
-                <tr className="border-b border-gray-200">
-                    <td className="p-4 border-b border-gray-200" colSpan={5}>Total</td>
-                    <td className="p-4 border-b border-gray-200">{total_subtotal?.toFixed(2)}</td>
-                    <td className="p-4 border-b border-gray-200">{total_delivery_fee?.toFixed(2)}</td>
-                    <td className="p-4 border-b border-gray-200">{total_income?.toFixed(2)}</td>
-                </tr>
-            </tfoot>
+          <tfoot>
+            <tr className="border-b border-gray-200">
+              <td className="p-4 border-b border-gray-200" colSpan={5}>
+                Total
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {total_subtotal?.toFixed(2)}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {total_delivery_fee?.toFixed(2)}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {total_income?.toFixed(2)}
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
@@ -241,7 +271,12 @@ export default function List({
       </div>
 
       {isModalOpen && (
-        <DetailsModal setIsModalOpen={setIsModalOpen} order={order} fetchOrder={fetchOrder} fetchOrders={fetchOrders} />
+        <DetailsModal
+          setIsModalOpen={setIsModalOpen}
+          order={order}
+          fetchOrder={fetchOrder}
+          fetchOrders={fetchOrders}
+        />
       )}
     </>
   );
