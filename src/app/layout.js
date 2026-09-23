@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
       >
 
           {children}
-          <Toaster position="top-center" />
+          <Toaster position="center" />
       
       </body>
     </html>

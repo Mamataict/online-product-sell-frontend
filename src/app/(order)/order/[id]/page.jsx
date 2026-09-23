@@ -372,7 +372,7 @@ export default function OrderCompletedPage() {
           কোনো সমস্যায় <Link href="#">সাপোর্টে যোগাযোগ করুন</Link> অথবা ফোন করুন{" "}
           <Link href="tel:8801896025050">01896025050</Link>
           <br />
-          © ২০২৬ Dairy Fresh · Made with ❤️ in Bangladesh
+          Copyright © 2026, Designed & Developed by Mamata
         </div>
       </div>
     </>

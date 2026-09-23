@@ -3,6 +3,7 @@ import ProductAdCarousel from "@/components/features_cus/ProductAdCarousel/Produ
 import Footer from "@/components/Footer";
 import FabButton from "@/components/front/FabButton";
 import OrderForm from "@/components/front/OrderForm";
+import Navbar from "@/components/NavBar";
 import api from "@/lib/axios";
 import Image from "next/image";
 
@@ -18,11 +19,23 @@ async function getHomeData() {
   }
 }
 
+const products = [
+  {
+    src: "bdb89f9a-15c3-4af0-9068-13abf3f95fd8.jfif",
+    name: "Beef",
+  },
+  {
+    src: "orosh.jpg",
+    name: "Orosh",
+  },
+];
+
 export default async function Home() {
   const data = await getHomeData();
 
   return (
     <main>
+      <Navbar />
       {/* Hero */}
       <section className="relative h-[650px] 2xl:h-[1000px] 3xl:h-[1500px] w-full">
         <Image
@@ -45,14 +58,25 @@ export default async function Home() {
         <ProductAdCarousel order_data={data} />
       </section>
 
-      <section className="container mx-auto my-15 h-[750px] flex justify-center items-center">
-        <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/bdb89f9a-15c3-4af0-9068-13abf3f95fd8.jfif`}
-          width={1200}
-          height={800}
-          className=" w-auto h-full object-contain rounded-lg shadow-2xl"
-          alt="Beef"
-        />
+      <section className="bg-[#14261C] py-16 sm:py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+            {products.map((product) => (
+              <div
+                key={product.src}
+                className="group relative aspect-[4/5] overflow-hidden rounded-sm"
+              >
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/${product.src}`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                  className="object-contain transition-transform duration-500 group-hover:scale-105"
+                  alt={product.name}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Order Form */}

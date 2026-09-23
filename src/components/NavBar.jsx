@@ -14,95 +14,8 @@ import {
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
-
-
 const menu = [
-  {
-    label: "Who we are",
-    key: "who_we_are",
-    children: [
-      {
-        label: "Health Population and Nutrition",
-        key: "health_population_nutration",
-        children: [],
-      },
-    ],
-  },
-  {
-    label: "What we do",
-    key: "what_we_do",
-    children: [
-      {
-        label: "Health Population and Nutrition",
-        key: "health_population_nutration",
-        children: [
-          {
-            label: "ESB+",
-            key: "esb",
-            children: [],
-          },
-          {
-            label: "TB Control",
-            key: "tb_control",
-            children: [],
-          },
-        ],
-      },
-      {
-        label: "Poverty Alleviation",
-        key: "poverty_alleviation",
-        children: [
-          {
-            label: "ESB+",
-            key: "esb",
-            children: [],
-          },
-          {
-            label: "TB Control",
-            key: "tb_control",
-            children: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: "News & events",
-    key: "news_events",
-    children: [
-      {
-        label: "Health Population and Nutrition",
-        key: "health_population_nutration",
-        children: [],
-      },
-    ],
-  },
-  {
-    label: "Publications",
-    key: "publications",
-    children: [
-      {
-        label: "Health Population and Nutrition",
-        key: "health_population_nutration",
-        children: [],
-      },
-    ],
-  },
-  {
-    label: "Gallery",
-    key: "gallery",
-    children: [],
-  },
-  {
-    label: "Contact",
-    key: "contact",
-    children: [],
-  },
-  {
-    label: "Career",
-    key: "career",
-    children: [],
-  },
+  
 ];
 const Navbar = () => {
   const [hoveredMenu, setHoveredMenu] = useState(null);
@@ -131,30 +44,18 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top bar */}
-      <div className="bg-[#0F6939] w-full py-2 px-3 sm:px-4 lg:px-[initial]">
-        <div className="container m-auto flex items-center justify-between">
-          <div className="text-white">Since 1983</div>
-          <div className="flex gap-4">
-            <FontAwesomeIcon icon={faFacebookF} color="white" />
-            <FontAwesomeIcon icon={faTwitter} color="white" />
-            <FontAwesomeIcon icon={faInstagram} color="white" />
-            <FontAwesomeIcon icon={faYoutube} color="white" />
-          </div>
-        </div>
-      </div>
 
       {/* Navbar */}
       <div
         className={`w-full sticky top-0 z-[99999]
           transition-all duration-500 ease-out main-nav shadow-m px-3 sm:px-4 lg:px-[initial]
-          ${scrolled ? "py-1" : "py-4"}`}
+          ${scrolled ? "py-1" : "py-2"}`}
       >
         <div className="container m-auto flex items-center justify-between h-full w-full">
           {/* Logo */}
 
           <Image
-            src="https://mamatabd.org/images/logo.png"
+            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/dairy_fresh_transparent.png`}
             alt="Mamata BD"
             width={70}
             height={70}

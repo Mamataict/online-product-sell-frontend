@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Receipt from "./Reciept";
 import DetailsModal from "./DetailsModal";
 import PermissionGuard from "../dashboard/PermissionGuard";
@@ -51,14 +51,14 @@ export default function List({
                 Customer Phone Number
               </th>
               <th className="p-4 border-b border-gray-200">Place Date</th>
+              <th className="p-4 border-b border-gray-200">Orders</th>
 
-              <th className="p-4 border-b border-gray-200">Subtotal</th>
-              <th className="p-4 border-b border-gray-200">Delivery Fee</th>
-              <th className="p-4 border-b border-gray-200">Grand Total</th>
+              <th className="p-4 border-b border-gray-200">Amount</th>
 
               <th className="p-4 border-b border-gray-200">Payment Status</th>
 
               <th className="p-4 border-b border-gray-200">Handler</th>
+              <th className="p-4 border-b border-gray-200">Remark</th>
 
               <th className="p-4 border-b border-gray-200">Actions</th>
             </tr>
@@ -93,12 +93,13 @@ export default function List({
                 <td className="p-4 border-b border-gray-200">
                   {order.place_date?.toString()}
                 </td>
-                <td className="p-4 border-b border-gray-200">
-                  {order.subtotal}
-                </td>
 
                 <td className="p-4 border-b border-gray-200">
-                  {order.delivery_fee}
+                  {order?.orders?.map((item) => (
+                    <div key={item.id}>
+                      {item.product?.name} - ({Number(item.qty)}) - {Number(item.qty) * Number(item.price)} BDT
+                    </div>
+                  ))}
                 </td>
                 <td className="p-4 border-b border-gray-200">
                   {order.grand_total}
@@ -121,6 +122,8 @@ export default function List({
                     </>
                   )}
                 </td>
+
+                <td className="p-4 border-b border-gray-200">{order.remark}</td>
 
                 <td className="p-4 border-b border-gray-200">
                   <div className="flex gap-2">
@@ -200,7 +203,6 @@ export default function List({
                         >
                           <FontAwesomeIcon icon={faRemove} />
                         </button>
-                        
                       </>
                     </PermissionGuard>
                   </div>
@@ -272,6 +274,7 @@ export default function List({
 
       {isModalOpen && (
         <DetailsModal
+          key={order?.id}
           setIsModalOpen={setIsModalOpen}
           order={order}
           fetchOrder={fetchOrder}

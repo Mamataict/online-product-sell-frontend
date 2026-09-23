@@ -1,7 +1,7 @@
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const status = {
   1: "Pending",
@@ -21,7 +21,6 @@ export default function DetailsModal({
   fetchOrder,
   fetchOrders,
 }) {
-
   const [remark, setRemark] = useState(order?.remark || "");
   const token = Cookies.get("auth_token");
   const orderStatusChange = async (orderId, status) => {
@@ -71,8 +70,6 @@ export default function DetailsModal({
     }
   };
   const orderRemarkChange = async (orderId) => {
-    // if (Number(status) === Number(order.status)) return;
-
     try {
       const res = await api.put(
         `/api/order/${orderId}/remark`,
@@ -93,6 +90,10 @@ export default function DetailsModal({
       toast.error(err?.response?.data?.message || "Failed to cancel order");
     }
   };
+
+  useEffect(() => {
+    setRemark(order?.remark ?? '');
+  }, [order]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -126,7 +127,7 @@ export default function DetailsModal({
         {/* Amount Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
           {[
-            { label: "Subtotal Amount", value: order?.subtotal ?? 0  },
+            { label: "Subtotal Amount", value: order?.subtotal ?? 0 },
             { label: "Delivery Fee", value: order?.delivery_fee ?? 0 },
             { label: "Grand Total", value: order?.grand_total ?? 0 },
           ].map((item, idx) => (
@@ -154,8 +155,9 @@ export default function DetailsModal({
                 <tr>
                   <th className="p-3 text-left">Product</th>
                   <th className="p-3 text-center">Unit</th>
-                  <th className="p-3 text-center">Price</th>
                   <th className="p-3 text-center">Qty</th>
+                  <th className="p-3 text-center">Price (1&times;)</th>
+                  <th className="p-3 text-center">Price</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,8 +168,11 @@ export default function DetailsModal({
                     </td>
 
                     <td className="p-3 text-center">{item.product?.unit}</td>
-                    <td className="p-3 text-center">৳ {item.price}</td>
-                    <td className="p-3 text-center">{item.qty ?? 0}</td>
+                    <td className="p-3 text-center">{Number(item.qty) ?? 0}</td>
+                    <td className="p-3 text-center">৳ {Number(item.price)}</td>
+                    <td className="p-3 text-center">
+                      ৳ {Number(item.price) * Number(item.qty)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -223,41 +228,48 @@ export default function DetailsModal({
             <label className="block font-medium text-gray-700 mb-1 text-lg">
               Remarks
             </label>
-            <textarea onChange={(e) => setRemark(e.target.value)} className="w-60 h-30 p-2" placeholder="Enter text here" value={remark}></textarea>
+            <textarea
+              onChange={(e) => setRemark(e.target.value)}
+              className="w-60 h-30 p-2"
+              placeholder="Enter text here"
+              value={remark}
+            ></textarea>
 
-            <button onClick={() => orderRemarkChange(order.id)} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <button
+              onClick={() => orderRemarkChange(order.id)}
+              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
               Save Remarks
             </button>
           </div>
         </section>
-         
 
         <section className="sm:flex gap-2 p-6">
           {Object.entries(status).map(([key, value]) => (
-            <div className="flex gap-2" key={key}>
+            <label className="flex items-center gap-2 cursor-pointer" key={key}>
               <input
                 type="radio"
                 name="status"
                 value={key}
-                checked={Number(key) == Number(order.status)}
+                checked={Number(key) === Number(order.status)}
                 onChange={() => orderStatusChange(order.id, key)}
               />
               <div>{value}</div>
-            </div>
+            </label>
           ))}
         </section>
         <section className="sm:flex gap-2 p-6">
           {Object.entries(payment_status).map(([key, value]) => (
-            <div className="flex gap-2" key={key}>
+            <label className="flex items-center gap-2 cursor-pointer" key={key}>
               <input
                 type="radio"
                 name="payment_status"
                 value={key}
-                checked={Number(key) == Number(order.payment_status)}
+                checked={Number(key) === Number(order.payment_status)}
                 onChange={() => orderPaymentStatusChange(order.id, key)}
               />
               <div>{value}</div>
-            </div>
+            </label>
           ))}
         </section>
 
