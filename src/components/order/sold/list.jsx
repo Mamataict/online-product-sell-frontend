@@ -29,67 +29,56 @@ export default function List({
   order,
   cancelOrder,
   handlePrint,
+  total_qty,
+  total_price,
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [productsData, setProductsData] = useState([]);
-
-  const token = Cookies.get("auth_token");
-
-  // const orderInfo = async (order_details_id) => {
-
-  //   try {
-  //     const res = await api.get(
-  //       `/api/order/product/details/${order_details_id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       },
-  //     );
-
-  //     setProductsData(res.data.data.data);
-  //     setIsModalOpen(true);
-
-  //   } catch (err) {
-  //     // setError(err?.response?.data);
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // }
-
   return (
     <>
       <div className="overflow-x-auto">
         <table className="table-auto w-full text-left">
           <thead>
             <tr>
+              <th className="p-4 border-b border-gray-200">SL.</th>
               <th className="p-4 border-b border-gray-200">Date</th>
               <th className="p-4 border-b border-gray-200">Invoice</th>
-              <th className="p-4 border-b border-gray-200">Product</th>
+              <th className="p-4 border-b border-gray-200">Payment Status</th>
               <th className="p-4 border-b border-gray-200">Customer</th>
               <th className="p-4 border-b border-gray-200">Qty</th>
               <th className="p-4 border-b border-gray-200">Amount</th>
+              <th className="p-4 border-b border-gray-200">Remark</th>
               {/* <th className="p-4 border-b border-gray-200">Actions</th> */}
             </tr>
           </thead>
           <tbody>
-            {products.map((order) => (
+            {products.map((order, index) => (
               <tr key={order.id} className="border-b border-gray-200">
+                <td className="p-4 border-b border-gray-200">
+                  {index + 1}
+                </td>
                 <td className="p-4 border-b border-gray-200">
                   {order.order_info?.place_date.toString().split("T")[0]}
                 </td>
 
                 <td className="p-4 border-b border-gray-200">
-                  {order.order_info?.invoice}
+                  {order.order_info?.order_info_id}
                 </td>
                 <td className="p-4 border-b border-gray-200">
-                  {order.product_price?.product?.name}
+                  {order.order_info?.payment_status_text}
+                </td>
+              
+                <td className="p-4 border-b border-gray-200">
+                  {order.order_info?.customer?.name} ({order.order_info?.customer?.phone})
                 </td>
                 <td className="p-4 border-b border-gray-200">
-                  {order.order_info?.customer?.name}
+                  {Number(order.qty).toFixed(2)}
                 </td>
-                <td className="p-4 border-b border-gray-200">{order.qty}</td>
-                <td className="p-4 border-b border-gray-200">{order.price}</td>
+                <td className="p-4 border-b border-gray-200">
+                  {Number(order.total_item_price).toFixed(2)}
+                </td>
+
+                 <td className="p-4 border-b border-gray-200">
+                  {order.order_info?.remark}
+                </td>
 
                 {/* <td className="p-4 border-b border-gray-200">
                   {order.payment_status == "completed" && (
@@ -179,6 +168,14 @@ export default function List({
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr>
+              <td className="p-4 border-b border-gray-200 font-bold" colSpan={5}>Total: </td>
+              <td className="p-4 border-b border-gray-200">{Number(total_qty).toFixed(2)} </td>
+              <td className="p-4 border-b border-gray-200">{Number(total_price).toFixed(2)} </td>
+              <td className="p-4 border-b border-gray-200"></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 

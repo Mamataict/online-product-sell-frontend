@@ -9,10 +9,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus, faPrint } from "@fortawesome/free-solid-svg-icons";
 import List from "@/components/order/sold/list";
 import AsyncSelect from "react-select/async";
+import Select from "react-select";
 
 export default function SoldProduct() {
+  const [total_qty, setTotalQty] = useState([]);
+  const [total_price, setTotalPrice] = useState([]);
   const [product_categories, setProductCategories] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -21,26 +24,27 @@ export default function SoldProduct() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const searchParams = useSearchParams();
-  const user_cus = searchParams.get("user");
-  const [user, setUser] = useState(user_cus);
+
   const [openMore, setOpenMore] = useState(false);
   const today = new Date();
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(today.getDate() - 30);
 
-  const [start_date, setStartDate] = useState(
-    thirtyDaysAgo.toISOString().slice(0, 10),
-  );
+  const [start_date, setStartDate] = useState(today.toISOString().slice(0, 10));
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
 
+
   const fetchSoldProducts = async (page = 1) => {
+
+    if(selectedProduct == ''){
+      toast.error("Select Product");
+      return;
+    }
     setLoading(true);
 
     try {
       const res = await api.get(
-        `/api/order/product?page=${page} && 
-        search=${searchTerm || ''} && start_date=${start_date || ''} && end_date=${end_date || ''} && product_id=${selectedProduct || ''}
-        `,
+        `/api/order/product?page=${page}&&start_date=${start_date || ""}&&end_date=${end_date || ""}&&product_id=${selectedProduct || ""}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -50,6 +54,8 @@ export default function SoldProduct() {
 
       setProducts(res.data.data.products.data);
       setProductCategories(res.data.data.product_categories);
+      setTotalQty(res.data.data.total_qty);
+      setTotalPrice(res.data.data.total_price);
       setCurrentPage(res.data.products.current_page);
       setLastPage(res.data.products.last_page);
     } catch (err) {
@@ -58,16 +64,6 @@ export default function SoldProduct() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (!user_cus) {
-      setUser(null);
-    }
-  }, [user_cus]);
-
-  useEffect(() => {
-    fetchSoldProducts(1);
-  }, []);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= lastPage) {
@@ -120,7 +116,7 @@ export default function SoldProduct() {
     if (!inputValue || inputValue.trim().length < 2) return [];
 
     try {
-      const res = await api.get(`/api/order/products?search=${inputValue}`, {
+      const res = await api.get(`/api/product/search?search=${inputValue}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -128,8 +124,8 @@ export default function SoldProduct() {
       });
 
       return res.data.data.map((product) => ({
-        value: product.product?.id,
-        label: `${product.product.name}, (${product.product.product_id})`,
+        value: product?.id,
+        label: `${product.name} - ${product.unit}`,
       }));
     } catch (error) {
       console.error(error);
@@ -143,12 +139,12 @@ export default function SoldProduct() {
 
   const applyBtn = () => {
     fetchSoldProducts(1);
-  }
+  };
 
   const handlePrintReport = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/report/sold/product/invoice?search=${searchTerm || ''} && start_date=${start_date || ''} && end_date=${end_date || ''} && product_id=${selectedProduct || ''}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/report/sold/product/invoice?start_date=${start_date || ""}&&end_date=${end_date || ""}&&product_id=${selectedProduct || ""}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -186,11 +182,11 @@ export default function SoldProduct() {
     }
   };
 
-  return (
-    <div className="max-w-3xl p-4 bg-white rounded-md shadow-md">
-      <div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
 
+  return (
+    <div className="max-w-6xl p-4 bg-white rounded-md shadow-md">
+      <div>
+        <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 mb-4">
           <AsyncSelect
             cacheOptions
             defaultOptions
@@ -200,16 +196,7 @@ export default function SoldProduct() {
             placeholder="Select Product..."
             isClearable
             className="w-full"
-          />
-
-          <input
-            id="search"
-            type="text"
-            placeholder="Search by invoice..."
-            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-            }}
+            
           />
 
           <input
@@ -289,7 +276,8 @@ export default function SoldProduct() {
         handlePageChange={handlePageChange}
         handleDelete={handleDelete}
         handleActivation={handleActivation}
-        user={user}
+        total_qty={total_qty}
+        total_price={total_price}
       />
     </div>
   );

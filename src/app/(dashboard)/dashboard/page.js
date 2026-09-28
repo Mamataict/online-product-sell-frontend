@@ -50,7 +50,7 @@ export default function DashboardPage() {
               <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Orders Count
+                    Orders
                   </label>
                   <div className="text-3xl">{data?.total_orders ?? ""}</div>
                 </div>
@@ -63,7 +63,7 @@ export default function DashboardPage() {
                 </div> */}
               </div>
 
-              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+              {/* <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
                     Paid Amount
@@ -72,19 +72,36 @@ export default function DashboardPage() {
                     {Number(data?.total_paid ?? 0) ?? ""} BDT
                   </div>
                 </div>
-                {/* <div className="text-sm mt-6">
+                <div className="text-sm mt-6">
                   <FontAwesomeIcon
                     icon={faMoneyBill}
                     className="text-green-500 mr-1"
                   />
                   Total income in the last 30 days
-                </div> */}
+                </div> 
               </div>
+              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+                <div className="mb-4 space-y-6">
+                  <label className="block font-medium text-gray-700 mb-1 text-lg">
+                    Due Amount
+                  </label>
+                  <div className="text-3xl">
+                    {Number(data?.total_due ?? 0) ?? ""} BDT
+                  </div>
+                </div>
+                 <div className="text-sm mt-6">
+                  <FontAwesomeIcon
+                    icon={faMoneyBill}
+                    className="text-green-500 mr-1"
+                  />
+                  Total income in the last 30 days
+                </div> 
+              </div> */}
 
               <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Pending Count
+                    Pending
                   </label>
                   <div className="text-3xl">{data?.total_pending ?? ""}</div>
                 </div>
@@ -99,7 +116,7 @@ export default function DashboardPage() {
               <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Confirmed Count
+                    Confirmed
                   </label>
                   <div className="text-3xl">{data?.total_confirmed ?? ""}</div>
                 </div>
@@ -114,7 +131,7 @@ export default function DashboardPage() {
               <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Delivered Count
+                    Delivered
                   </label>
                   <div className="text-3xl">{data?.total_delivered ?? ""}</div>
                 </div>
@@ -129,7 +146,7 @@ export default function DashboardPage() {
               <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Cancelled Count
+                    Cancelled
                   </label>
                   <div className="text-3xl">{data?.total_cancelled ?? ""}</div>
                 </div>

@@ -307,7 +307,7 @@ const SideBar = () => {
               onClick={() => toggleMenu("order")}
               className="flex justify-between w-full px-4 py-3 admin-sidebar-menu rounded"
             >
-              Sale
+              Order
               <FontAwesomeIcon
                 icon={faChevronDown}
                 className={arrowClass("order")}
@@ -320,15 +320,15 @@ const SideBar = () => {
                   href="/dashboard/order"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
-                  Sale Info
+                  Order Info
                 </Link>
-                {/* <Link
+                <Link
                   href="/dashboard/order/product"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
-                  Product Sale Info
+                  Product Sale
                 </Link>
-                <Link
+                {/* <Link
                   href="/dashboard/customer"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >

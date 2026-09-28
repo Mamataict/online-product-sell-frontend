@@ -30,18 +30,17 @@ export default function List({
   deleteOrder,
   handlePrint,
   handlePrintInvoiceReport,
-  total_income,
-  total_delivery_fee,
-  total_subtotal,
+  total_amount,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full text-left">
+        <table className="table-auto w-full text-left ">
           <thead>
             <tr>
+              <th className="p-4 border-b border-gray-200">SL.</th>
               <th className="p-4 border-b border-gray-200">Order ID</th>
 
               <th className="p-4 border-b border-gray-200">Status</th>
@@ -51,7 +50,7 @@ export default function List({
                 Customer Phone Number
               </th>
               <th className="p-4 border-b border-gray-200">Place Date</th>
-              <th className="p-4 border-b border-gray-200">Orders</th>
+              <th className="p-4 border-b border-gray-200 w-64">Order Items</th>
 
               <th className="p-4 border-b border-gray-200">Amount</th>
 
@@ -64,8 +63,9 @@ export default function List({
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {orders.map((order, index) => (
               <tr key={order.id} className="border-b border-gray-200">
+                <td className="p-4 border-b border-gray-200">{index + 1}</td>
                 <td className="p-4 border-b border-gray-200">
                   {order.order_info_id}
                 </td>
@@ -94,10 +94,11 @@ export default function List({
                   {order.place_date?.toString()}
                 </td>
 
-                <td className="p-4 border-b border-gray-200">
+                <td className="p-4 border-b border-gray-200 w-64 align-top">
                   {order?.orders?.map((item) => (
-                    <div key={item.id}>
-                      {item.product?.name} - ({Number(item.qty)}) - {Number(item.qty) * Number(item.price)} BDT
+                    <div key={item.id} className="break-words">
+                      {item.product?.name} - {item.product?.unit} - ({Number(item.qty)}) -{" "}
+                      {Number(item.qty) * Number(item.price)} BDT
                     </div>
                   ))}
                 </td>
@@ -213,18 +214,11 @@ export default function List({
 
           <tfoot>
             <tr className="border-b border-gray-200">
-              <td className="p-4 border-b border-gray-200" colSpan={5}>
+              <td className="p-4 border-b border-gray-200" colSpan={7}>
                 Total
               </td>
-              <td className="p-4 border-b border-gray-200">
-                {total_subtotal?.toFixed(2)}
-              </td>
-              <td className="p-4 border-b border-gray-200">
-                {total_delivery_fee?.toFixed(2)}
-              </td>
-              <td className="p-4 border-b border-gray-200">
-                {total_income?.toFixed(2)}
-              </td>
+
+              <td className="p-4 border-b border-gray-200">{total_amount}</td>
             </tr>
           </tfoot>
         </table>

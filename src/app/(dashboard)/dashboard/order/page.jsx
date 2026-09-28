@@ -22,6 +22,7 @@ import PermissionGuard from "@/components/dashboard/PermissionGuard";
 
 export default function OrdersInfo() {
   const [orders, setOrders] = useState([]);
+  const [total_amount, seTotalAmount] = useState(0);
   const [order, setOrder] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,6 +62,7 @@ export default function OrdersInfo() {
       );
 
       setOrders(res.data.data.orders.data);
+      seTotalAmount(res.data.data.total_amount);
       setCurrentPage(res.data.data.orders.current_page);
       setLastPage(res.data.data.orders.last_page);
     } catch (err) {
@@ -146,10 +148,6 @@ export default function OrdersInfo() {
     { value: 1, label: "Due" },
     { value: 2, label: "Paid" },
   ];
-
-  const total_income = orders.reduce((sum, order) => sum + Number(order.grand_total), 0);
-  const total_delivery_fee = orders.reduce((sum, order) => sum + Number(order.delivery_fee), 0);
-  const total_subtotal = orders.reduce((sum, order) => sum + Number(order.subtotal), 0);
 
   return (
     <div className="space-y-5">
@@ -390,9 +388,7 @@ export default function OrdersInfo() {
           order={order}
           cancelOrder={cancelOrder}
           deleteOrder={deleteOrder}
-          total_income={total_income}
-          total_delivery_fee={total_delivery_fee}
-          total_subtotal={total_subtotal}
+          total_amount={total_amount}
         />
       </div>
     </div>

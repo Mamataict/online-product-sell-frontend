@@ -235,19 +235,34 @@ const Navbar = () => {
           {hasAnyPermission(["order.index", "order.store", "order.customers.info"]) && (
             <div>
               <button onClick={() => toggleMenu("order")} className="flex justify-between w-full px-4 py-3">
-                Sale
+                Order
                 <FontAwesomeIcon icon={faChevronDown} className={arrowClass("order")} />
               </button>
               {openMenu === "order" && (
                 <div className="pl-6">
-                  <Link href="/dashboard/order" className="block py-2">Sale Info</Link>
-                  <Link href="/dashboard/order/product" className="block py-2">Product Sale Info</Link>
-                  <Link href="/dashboard/customer" className="block py-2">Customer</Link>
-                  <Link href="/dashboard/order/new" className="block py-2">Sale Create</Link>
+                  <Link href="/dashboard/order" className="block py-2">Order Info</Link>
+                  <Link href="/dashboard/order/product" className="block py-2">Product Sale</Link>
+                  {/* <Link href="/dashboard/customer" className="block py-2">Customer</Link>
+                  <Link href="/dashboard/order/new" className="block py-2">Sale Create</Link> */}
                 </div>
               )}
             </div>
           )}
+
+          <div>
+              <button onClick={() => toggleMenu("delivery_fee")} className="flex justify-between w-full px-4 py-3">
+                Delivery Fee
+                <FontAwesomeIcon icon={faChevronDown} className={arrowClass("delivery_fee")} />
+              </button>
+              {openMenu === "delivery_fee" && (
+                <div className="pl-6">
+                  <Link href="/dashboard/delivery_fee" className="block py-2">Delivery Fee</Link>
+                  {/* <Link href="/dashboard/order/product" className="block py-2">Product Sale</Link> */}
+                  {/* <Link href="/dashboard/customer" className="block py-2">Customer</Link>
+                  <Link href="/dashboard/order/new" className="block py-2">Sale Create</Link> */}
+                </div>
+              )}
+            </div>
 
           {hasAnyPermission(["order.due.report"]) && (
             <div>
