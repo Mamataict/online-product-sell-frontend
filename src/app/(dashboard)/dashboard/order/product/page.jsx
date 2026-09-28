@@ -10,6 +10,8 @@ import { faPlus, faMinus, faPrint } from "@fortawesome/free-solid-svg-icons";
 import List from "@/components/order/sold/list";
 import AsyncSelect from "react-select/async";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function SoldProduct() {
   const [total_qty, setTotalQty] = useState([]);
@@ -33,10 +35,8 @@ export default function SoldProduct() {
   const [start_date, setStartDate] = useState(today.toISOString().slice(0, 10));
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
 
-
   const fetchSoldProducts = async (page = 1) => {
-
-    if(selectedProduct == ''){
+    if (selectedProduct == "") {
       toast.error("Select Product");
       return;
     }
@@ -182,6 +182,8 @@ export default function SoldProduct() {
     }
   };
 
+  const toYMD = (d) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
   return (
     <div className="max-w-6xl p-4 bg-white rounded-md shadow-md">
@@ -196,29 +198,26 @@ export default function SoldProduct() {
             placeholder="Select Product..."
             isClearable
             className="w-full"
-            
           />
 
-          <input
-            id="search"
-            type="date"
-            placeholder="Search by date..."
-            className="px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            onChange={(e) => {
-              setStartDate(e.target.value);
-            }}
-            value={start_date}
+          <DatePicker
+            selected={start_date}
+            onChange={(date) => setStartDate(date ? toYMD(date) : "")}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="Search by date..."
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            wrapperClassName="w-full"
+            portalId="datepicker-portal"
           />
 
-          <input
-            id="search"
-            type="date"
-            placeholder="Search by date..."
-            className=" px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            onChange={(e) => {
-              setEndDate(e.target.value);
-            }}
-            value={end_date}
+          <DatePicker
+            selected={end_date}
+            onChange={(date) => setEndDate(date ? toYMD(date) : "")}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="Search by date..."
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            wrapperClassName="w-full"
+            portalId="datepicker-portal"
           />
 
           <button

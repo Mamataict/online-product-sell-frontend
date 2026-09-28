@@ -37,7 +37,7 @@ export default function List({
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full text-left ">
+        <table className=" w-[1200px] ">
           <thead>
             <tr>
               <th className="p-4 border-b border-gray-200">SL.</th>
@@ -50,7 +50,7 @@ export default function List({
                 Customer Phone Number
               </th>
               <th className="p-4 border-b border-gray-200">Place Date</th>
-              <th className="p-4 border-b border-gray-200 w-64">Order Items</th>
+              <th className="p-4 border-b border-gray-200 w-64" >Order Items</th>
 
               <th className="p-4 border-b border-gray-200">Amount</th>
 
@@ -94,7 +94,7 @@ export default function List({
                   {order.place_date?.toString()}
                 </td>
 
-                <td className="p-4 border-b border-gray-200 w-64 align-top">
+                <td className="p-4 border-b border-gray-200 w-64" >
                   {order?.orders?.map((item) => (
                     <div key={item.id} className="break-words">
                       {item.product?.name} - {item.product?.unit} - ({Number(item.qty)}) -{" "}

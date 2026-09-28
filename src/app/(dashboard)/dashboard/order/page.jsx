@@ -19,6 +19,8 @@ import List from "@/components/order/list";
 import AsyncSelect from "react-select/async";
 import Select from "react-select";
 import PermissionGuard from "@/components/dashboard/PermissionGuard";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function OrdersInfo() {
   const [orders, setOrders] = useState([]);
@@ -32,11 +34,11 @@ export default function OrdersInfo() {
   const [error, setError] = useState("");
 
   const today = new Date();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(today.getDate() - 30);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(today.getDate() - 7);
 
   const [start_date, setStartDate] = useState(
-    thirtyDaysAgo.toISOString().slice(0, 10),
+    sevenDaysAgo.toISOString().slice(0, 10),
   );
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
 
@@ -122,14 +124,11 @@ export default function OrdersInfo() {
     if (!confirmed) return;
 
     try {
-      const res = await api.delete(
-        `/api/order/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await api.delete(`/api/order/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       toast.success(res.data.message);
       fetchOrders(currentPage);
@@ -148,6 +147,9 @@ export default function OrdersInfo() {
     { value: 1, label: "Due" },
     { value: 2, label: "Paid" },
   ];
+
+  const toYMD = (d) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
   return (
     <div className="space-y-5">
@@ -276,29 +278,28 @@ export default function OrdersInfo() {
           </div>
         </div>
       </PermissionGuard> */}
-      <div className="max-w-6xl p-4 bg-white rounded-md shadow-md">
+      <div className="max-w-7xl p-4 bg-white rounded-md shadow-md">
         <div>
           <div className="flex">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <input
-                id="search"
-                type="date"
-                placeholder="Search by date..."
-                className=" px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                onChange={(e) => {
-                  setStartDate(e.target.value);
-                }}
-                value={start_date}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+              <DatePicker
+                selected={start_date}
+                onChange={(date) => setStartDate(date ? toYMD(date) : "")}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Search by date..."
+                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                wrapperClassName="w-full"
+                portalId="datepicker-portal"
               />
-              <input
-                id="search"
-                type="date"
-                placeholder="Search by date..."
-                className=" px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                onChange={(e) => {
-                  setEndDate(e.target.value);
-                }}
-                value={end_date}
+
+              <DatePicker
+                selected={end_date}
+                onChange={(date) => setEndDate(date ? toYMD(date) : "")}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Search by date..."
+                className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                wrapperClassName="w-full"
+                portalId="datepicker-portal"
               />
               <input
                 id="search"
@@ -324,9 +325,8 @@ export default function OrdersInfo() {
               <Select
                 options={orderStatusOptions}
                 value={
-                  orderStatusOptions.find(
-                    (opt) => opt.value === orderStatus,
-                  ) || ""
+                  orderStatusOptions.find((opt) => opt.value === orderStatus) ||
+                  ""
                 }
                 onChange={(selected) => setOrderStatus(selected?.value || "")}
                 placeholder="Select Order Status"
@@ -339,7 +339,9 @@ export default function OrdersInfo() {
                     (opt) => opt.value === orderPaymentStatus,
                   ) || ""
                 }
-                onChange={(selected) => setOrderPaymentStatus(selected?.value || "")}
+                onChange={(selected) =>
+                  setOrderPaymentStatus(selected?.value || "")
+                }
                 placeholder="Select Order Payment Status"
                 isClearable
               />
