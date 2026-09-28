@@ -35,6 +35,8 @@ export default function SoldProduct() {
   const [start_date, setStartDate] = useState(today.toISOString().slice(0, 10));
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
 
+  const [serial, setSerial] = useState(0);
+
   const fetchSoldProducts = async (page = 1) => {
     if (selectedProduct == "") {
       toast.error("Select Product");
@@ -53,11 +55,12 @@ export default function SoldProduct() {
       );
 
       setProducts(res.data.data.products.data);
+      setSerial(res.data.data.products.from ?? 0);
       setProductCategories(res.data.data.product_categories);
       setTotalQty(res.data.data.total_qty);
       setTotalPrice(res.data.data.total_price);
-      setCurrentPage(res.data.products.current_page);
-      setLastPage(res.data.products.last_page);
+      setCurrentPage(res.data.data.products.current_page);
+      setLastPage(res.data.data.products.last_page);
     } catch (err) {
       setError(err?.response?.data);
     } finally {
@@ -277,6 +280,7 @@ export default function SoldProduct() {
         handleActivation={handleActivation}
         total_qty={total_qty}
         total_price={total_price}
+        serial={Number(serial)}
       />
     </div>
   );

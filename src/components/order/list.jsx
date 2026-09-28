@@ -31,6 +31,7 @@ export default function List({
   handlePrint,
   handlePrintInvoiceReport,
   total_amount,
+  serial,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -65,7 +66,7 @@ export default function List({
           <tbody>
             {orders.map((order, index) => (
               <tr key={order.id} className="border-b border-gray-200">
-                <td className="p-4 border-b border-gray-200">{index + 1}</td>
+                <td className="p-4 border-b border-gray-200">{serial + index}</td>
                 <td className="p-4 border-b border-gray-200">
                   {order.order_info_id}
                 </td>

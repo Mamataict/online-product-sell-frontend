@@ -31,6 +31,7 @@ export default function List({
   handlePrint,
   total_qty,
   total_price,
+  serial,
 }) {
   return (
     <>
@@ -53,7 +54,7 @@ export default function List({
             {products.map((order, index) => (
               <tr key={order.id} className="border-b border-gray-200">
                 <td className="p-4 border-b border-gray-200">
-                  {index + 1}
+                  {serial + index}
                 </td>
                 <td className="p-4 border-b border-gray-200">
                   {order.order_info?.place_date.toString().split("T")[0]}

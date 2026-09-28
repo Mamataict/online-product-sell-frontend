@@ -51,6 +51,8 @@ export default function OrdersInfo() {
   const [orderStatus, setOrderStatus] = useState(1);
   const [orderPaymentStatus, setOrderPaymentStatus] = useState(1);
 
+  const [serial, setSerial] = useState(0);
+
   const fetchOrders = async (page = 1) => {
     setLoading(true);
     try {
@@ -64,6 +66,7 @@ export default function OrdersInfo() {
       );
 
       setOrders(res.data.data.orders.data);
+      setSerial(res.data.data.orders.from ?? 0)
       seTotalAmount(res.data.data.total_amount);
       setCurrentPage(res.data.data.orders.current_page);
       setLastPage(res.data.data.orders.last_page);
@@ -391,6 +394,7 @@ export default function OrdersInfo() {
           cancelOrder={cancelOrder}
           deleteOrder={deleteOrder}
           total_amount={total_amount}
+          serial={Number(serial)}
         />
       </div>
     </div>
