@@ -12,6 +12,7 @@ import AsyncSelect from "react-select/async";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { printReport, cleanupPrint } from "@/lib/printReport";
 
 export default function SoldProduct() {
   const [total_qty, setTotalQty] = useState([]);
@@ -36,6 +37,9 @@ export default function SoldProduct() {
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
 
   const [serial, setSerial] = useState(0);
+
+  const [paper, setPaper] = useState("a4");
+  const [orientation, setOrientation] = useState("portrait");
 
   const fetchSoldProducts = async (page = 1) => {
     if (selectedProduct == "") {
@@ -144,44 +148,62 @@ export default function SoldProduct() {
     fetchSoldProducts(1);
   };
 
+  // const handlePrintReport = async () => {
+  //   try {
+  //     const res = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/api/report/sold/product/invoice?start_date=${start_date || ""}&&end_date=${end_date || ""}&&product_id=${selectedProduct || ""}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       },
+  //     );
+
+  //     const url = URL.createObjectURL(await res.blob());
+  //     const iframe = document.createElement("iframe");
+  //     iframe.style.cssText =
+  //       "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+  //     iframe.src = url;
+
+  //     iframe.onload = () => {
+  //       try {
+  //         iframe.contentWindow?.focus();
+  //         iframe.contentWindow?.print();
+  //       } catch {
+  //         window.open(url, "_blank");
+  //       }
+  //       setTimeout(() => {
+  //         if (iframe.parentNode) document.body.removeChild(iframe);
+  //         URL.revokeObjectURL(url);
+  //       }, 60000);
+  //     };
+
+  //     document.body.appendChild(iframe);
+  //   } catch (err) {
+  //     console.error("Failed to print receipt:", err);
+  //   }
+  // };
+
   const handlePrintReport = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/report/sold/product/invoice?start_date=${start_date || ""}&&end_date=${end_date || ""}&&product_id=${selectedProduct || ""}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await printReport({
+        path: `/api/report/sold/product/invoice`,
+        token,
+        filename: "sold-product-report.pdf",
+        params: {
+          start_date,
+          end_date,
+          product_id: selectedProduct,
+          paper,
+          orientation: paper === "80mm" ? "portrait" : orientation,
         },
-      );
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      const iframe = document.createElement("iframe");
-      iframe.style.position = "fixed";
-      iframe.style.right = "0";
-      iframe.style.bottom = "0";
-      iframe.style.width = "0";
-      iframe.style.height = "0";
-      iframe.style.border = "0";
-      iframe.src = url;
-
-      document.body.appendChild(iframe);
-
-      iframe.onload = () => {
-        const iframeWindow = iframe.contentWindow;
-
-        iframeWindow.focus();
-        iframeWindow.print();
-
-        iframeWindow.onafterprint = () => {
-          document.body.removeChild(iframe);
-          URL.revokeObjectURL(url);
-        };
-      };
+      });
     } catch (err) {
-      console.error("Failed to print receipt:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -231,8 +253,25 @@ export default function SoldProduct() {
             Search
           </button>
 
+          {/* <select value={paper} onChange={(e) => setPaper(e.target.value)}>
+            <option value="a4">A4</option>
+            <option value="a5">A5</option>
+            <option value="letter">Letter</option>
+            <option value="80mm">Receipt 80mm</option>
+          </select>
+
+          <select
+            value={orientation}
+            onChange={(e) => setOrientation(e.target.value)}
+            disabled={paper === "80mm"}
+          >
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select> */}
+
           <button
-            onClick={() => handlePrintReport()}
+            onClick={handlePrintReport}
+            disabled={loading}
             className=" cursor-pointer bg-blue-700 text-white px-3 py-1 rounded"
             title="Print Invoice Report"
           >
