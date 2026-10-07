@@ -5,6 +5,8 @@ import FabButton from "@/components/front/FabButton";
 import OrderForm from "@/components/front/OrderForm";
 import Navbar from "@/components/NavBar";
 import api from "@/lib/axios";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
 export const dynamic = "force-dynamic";
@@ -35,22 +37,95 @@ export default async function Home() {
 
   return (
     <main>
-      <Navbar />
+      {/* <Navbar /> */}
       {/* Hero */}
-      <section className="relative h-[650px] 2xl:h-[1000px] 3xl:h-[1500px] w-full">
+      {/* <section className="relative h-[650px] 2xl:h-[1000px] 3xl:h-[1500px] w-full">
         <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/milk-ghee.jpg`}
+    src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/milk-ghee.jpg`}
+    alt="Dairy Fresh background"
+    fill
+    priority
+    className="object-cover"
+  />
+
+  
+
+        <div className="absolute top-0 left-0 w-[100vw] z-[999999] grid sm:grid-cols-2 gap-4 ">
+          <div className=" w-full p-4 sm:p-20 lg:p-10">
+
+          <ProductAdCarousel
+            order_data={data}
+            custom_preview={1}
+            custom_space={10}
+          />
+          </div>
+          <div className="flex justify-center items-center w-full">
+
+          <div>
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy_fresh_logo.png`}
+            alt="Dairy Fresh background"
+            width={400}
+            height={400}
+            priority
+            className="mt-20 mb-20"
+          />
+          <button className="bg-[#0F6939] text-white py-4 px-6 rounded-lg hover:bg-[#0a4d2a] transition-colors text-5xl font-bold ml-8">
+            বিস্তারিত <FontAwesomeIcon icon={faArrowDown} className="ml-2 text-md" />
+          </button>
+          </div>
+          </div>
+          
+        </div>
+      </section> */}
+
+      <section className="relative min-h-[650px] w-full overflow-hidden 2xl:min-h-[1000px] 3xl:min-h-[1500px]">
+        {/* Background */}
+        <Image
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/bg-cover.jpg`}
           alt="Dairy Fresh background"
           fill
           priority
-          className="object-cover"
+          className="object-cover opacity-300"
         />
-        <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/dairy_fresh_transparent.png`}
-          alt="Dairy Fresh logo"
-          fill
-          className="object-contain"
-        />
+
+        {/* Optional dark overlay for better readability */}
+        <div className="absolute inset-0 z-[1] bg-black/20" />
+
+        {/* Content */}
+        <div className="absolute inset-0 z-10 grid w-full grid-cols-1 items-center gap-8 px-6 py-10 sm:grid-cols-2 sm:px-10 lg:px-16 2xl:px-24">
+          <div className="flex w-full flex-col items-center justify-center text-center">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/logo-splash.png`}
+              alt="Dairy Fresh logo"
+              width={500}
+              height={500}
+              priority
+              className="mb-6 w-[250px] sm:w-[300px] lg:w-[400px] 2xl:w-[450px]"
+            />
+
+            <a
+              href="#orders"
+              className="mt-8 inline-flex items-center rounded-lg bg-[#0F6939] px-6 py-3 text-xl font-bold text-white shadow-lg transition-colors hover:bg-[#0a4d2a] sm:px-8 sm:py-4 sm:text-2xl"
+            >
+              অর্ডার করুন
+              <FontAwesomeIcon
+                icon={faArrowDown}
+                className="ml-3 text-lg sm:text-xl"
+              />
+            </a>
+          </div>
+
+          <div className="flex w-full items-center justify-center">
+            <div className="w-full max-w-[600px] z-[999999] h-[400px]">
+              <ProductAdCarousel
+                order_data={data}
+                custom_preview={1}
+                custom_space={10}
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Product Carousel */}
@@ -58,7 +133,7 @@ export default async function Home() {
         <ProductAdCarousel order_data={data} />
       </section>
 
-      <section className="bg-[#14261C] py-16 sm:py-24">
+      <section className="bg-[#14261C] py-16 sm:py-24" id="orders">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
             {products.map((product) => (

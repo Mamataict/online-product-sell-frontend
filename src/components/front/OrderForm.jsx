@@ -479,7 +479,7 @@ export default function OrderForm({ order_data }) {
                     height={50}
                     priority
                   />
-                  <div>বিকাশ-01627962866(পার্সনাল) - সেন্ড মানি করুন</div>
+                  <div>বিকাশ-{order_data.bkash}(পার্সনাল) - সেন্ড মানি করুন</div>
                 </div>
               </div>
 
