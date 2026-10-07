@@ -81,18 +81,7 @@ export default function OrdersInfo() {
     fetchOrders(1);
   }, []);
 
-  const fetchOrder = async (order_id_cus) => {
-    try {
-      const res = await api.get(`/api/order/${order_id_cus}/details`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setOrder(res.data.data);
-    } catch (err) {
-      setError(err?.response?.data);
-    }
-  };
+  
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= lastPage) {
@@ -388,7 +377,7 @@ export default function OrdersInfo() {
           setCurrentPage={setCurrentPage}
           lastPage={lastPage}
           handlePageChange={handlePageChange}
-          fetchOrder={fetchOrder}
+         
           fetchOrders={fetchOrders}
           order={order}
           cancelOrder={cancelOrder}

@@ -26,7 +26,7 @@ export default function FrontAdModal() {
       <div className="relative flex flex-col sm:flex-row items-center justify-center gap-4 w-full h-full max-w-6xl max-h-[95vh] overflow-y-auto">
         {/* Images */}
         <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/bdb89f9a-15c3-4af0-9068-13abf3f95fd8.jfif`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/beef.jpg`}
           width={1200}
           height={800}
           sizes="(max-width: 640px) 90vw, 45vw"
@@ -34,12 +34,12 @@ export default function FrontAdModal() {
           alt="Beef"
         />
         <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/orosh.jpg`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/omega-3.jfif`}
           width={1200}
           height={800}
           sizes="(max-width: 640px) 90vw, 45vw"
           className="w-full sm:w-1/2 h-auto max-h-[45vh] sm:max-h-[90vh] object-contain rounded-lg shadow-2xl"
-          alt="Orosh"
+          alt="Omega 3"
         />
 
         {/* Close Button */}

@@ -49,10 +49,10 @@ const Navbar = () => {
       <div className="bg-white rounded-2xl lg:hidden my-3 p-3 flex justify-between">
         <Link href="/dashboard">
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/logo.png`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy_fresh_logo.png`}
             alt="Logo"
-            width={80}
-            height={80}
+            width={50}
+            height={50}
             priority
           />
         </Link>

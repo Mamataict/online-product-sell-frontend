@@ -372,7 +372,7 @@ export default function OrderCompletedPage() {
           কোনো সমস্যায় <Link href="#">সাপোর্টে যোগাযোগ করুন</Link> অথবা ফোন করুন{" "}
           <Link href="tel:8801896025050">01896025050</Link>
           <br />
-          Copyright © 2026, Designed & Developed by Mamata
+          © {new Date().getFullYear()} <Link href="https://www.mamatabd.org" target="_blank" className="text-white hover:underline">Mamata</Link>, All rights reserved.
         </div>
       </div>
     </>

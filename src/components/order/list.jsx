@@ -5,6 +5,7 @@ import {
   faDumpster,
   faEdit,
   faEye,
+  faFileEdit,
   faList,
   faPrint,
   faRecycle,
@@ -23,7 +24,7 @@ export default function List({
   setCurrentPage,
   lastPage,
   handlePageChange,
-  fetchOrder,
+
   fetchOrders,
   order,
   cancelOrder,
@@ -173,27 +174,17 @@ export default function List({
                     <PermissionGuard permission={"order.update"}>
                       <>
                         <Link
-                          href={`/dashboard/order/new?order_id=${order.id}&&order_type=edit`}
+                          href={`/dashboard/order/${order.id}`}
                           className=" text-blue-600 cursor-pointer hover:underline"
                         >
                           <FontAwesomeIcon icon={faEdit} />
                         </Link>
-                        |
+                        
                       </>
                     </PermissionGuard>
 
-                    <a
-                      href="#"
-                      role="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        fetchOrder(order.id);
-                        setIsModalOpen(true);
-                      }}
-                      className=" text-blue-600 cursor-pointer hover:underline"
-                    >
-                      <FontAwesomeIcon icon={faList} />
-                    </a>
+                 
+
 
                     <PermissionGuard permission={"order.destroy"}>
                       <>
@@ -267,15 +258,7 @@ export default function List({
         </a>
       </div>
 
-      {isModalOpen && (
-        <DetailsModal
-          key={order?.id}
-          setIsModalOpen={setIsModalOpen}
-          order={order}
-          fetchOrder={fetchOrder}
-          fetchOrders={fetchOrders}
-        />
-      )}
+    
     </>
   );
 }

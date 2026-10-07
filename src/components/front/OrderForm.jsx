@@ -35,9 +35,9 @@ export default function OrderForm({ order_data }) {
       ?.delivery_charge || 0;
 
   const toggleProduct = (product, item_type) => {
-    if(item_type == 'special_delivery'){
+    if (item_type == "special_delivery") {
       setShipping(0);
-    }else{
+    } else {
       setShipping(order_data?.delivery_fee?.[0]?.id || null);
     }
     if (item_type != prev_item_category) {
@@ -449,12 +449,37 @@ export default function OrderForm({ order_data }) {
               <div className="border-dotted rounded-2xl py-4">
                 <div className="text-xl font-semibold">Payment Method</div>
                 <hr />
-                <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4">
-                  <FontAwesomeIcon
+                <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4 flex space-x-2">
+                  {/* <FontAwesomeIcon
                     className="text-green-700"
                     icon={faCheckCircle}
-                  />{" "}
+                  />{" "} */}
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/cod.png`}
+                    alt="Cash on Delivery"
+                    width={20}
+                    height={20}
+                    priority
+                  />
+                  <div>
+
                   Cash on delivery (COD)
+                  </div>
+                </div>
+                <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4 flex space-x-2">
+                  {/* <FontAwesomeIcon
+                    className="text-green-700 mt-1"
+                    icon={faCheckCircle}
+                  />{" "} */}
+                  {/* <Image src="/images/bkash.png" alt="Bkash" className="inline h-6 w-auto" /> */}
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/bkash.png`}
+                    alt="Bkash"
+                    width={50}
+                    height={50}
+                    priority
+                  />
+                  <div>বিকাশ-01627962866(পার্সনাল) - সেন্ড মানি করুন</div>
                 </div>
               </div>
 

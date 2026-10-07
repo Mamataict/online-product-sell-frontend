@@ -55,10 +55,10 @@ const Navbar = () => {
           {/* Logo */}
 
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/dairy_fresh_transparent.png`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy_fresh_logo.png`}
             alt="Mamata BD"
-            width={70}
-            height={70}
+            width={50}
+            height={50}
             className="transition-transform duration-500"
           />
 

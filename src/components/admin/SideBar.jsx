@@ -39,10 +39,10 @@ const SideBar = () => {
         <div className="h-[100px] flex justify-center items-center">
           <Link href="/">
             <Image
-              src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy-fresh.png`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy_fresh_logo.png`}
               alt="Logo"
-              width={100}
-              height={100}
+              width={70}
+              height={70}
               priority
             />
           </Link>

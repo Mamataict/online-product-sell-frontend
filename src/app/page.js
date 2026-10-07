@@ -21,12 +21,12 @@ async function getHomeData() {
 
 const products = [
   {
-    src: "bdb89f9a-15c3-4af0-9068-13abf3f95fd8.jfif",
+    src: "beef.jpg",
     name: "Beef",
   },
   {
-    src: "orosh.jpg",
-    name: "Orosh",
+    src: "omega-3.jfif",
+    name: "Omega 3",
   },
 ];
 
