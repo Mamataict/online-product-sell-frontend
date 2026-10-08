@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./styles.css";
 
-export default function ProductAdCarousel({ order_data, custom_preview = null, custom_space = null }) {
+export default function ProductAdCarousel({ order_data, custom_preview = null, custom_space = null, custom_class = null }) {
   const products = order_data?.products_view;
 
   if (!products?.length) return null;
@@ -17,7 +17,7 @@ export default function ProductAdCarousel({ order_data, custom_preview = null, c
       rewind={true}
       navigation={true}
       modules={[Navigation, Autoplay]}
-      className="mySwiper"
+      className="mySwiper custom-class-main-carousel"
       autoplay={{
         delay: 2500,
         disableOnInteraction: false,
@@ -31,13 +31,14 @@ export default function ProductAdCarousel({ order_data, custom_preview = null, c
     >
       {products.map((product, index) => (
         <SwiperSlide key={product.id}>
-          <div className="relative w-full h-full shadow-md overflow-hidden">
+          <div className={`relative w-full h-full shadow-md overflow-hidden ` + (custom_class || '')}>
             <Image
               src={product.image_url}
               alt={product.name}
-              fill
+              width={400}
+              height={400}
               loading={index === 0 ? "eager" : "lazy"}
-              className="object-cover"
+              className={'object-cover'}
             />
           </div>
         </SwiperSlide>

@@ -79,50 +79,64 @@ export default async function Home() {
         </div>
       </section> */}
 
-      <section className="relative min-h-[650px] w-full overflow-hidden 2xl:min-h-[1000px] 3xl:min-h-[1500px]">
+      <section className="relative min-h-[1100px] w-full overflow-hidden sm:min-h-[800px] lg:min-h-[900px] ">
         {/* Background */}
         <Image
           src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/bg-cover.jpg`}
           alt="Dairy Fresh background"
           fill
           priority
-          className="object-cover opacity-300"
+          className="object-cover"
         />
 
         {/* Optional dark overlay for better readability */}
-        <div className="absolute inset-0 z-[1] bg-black/20" />
+        <div className="absolute inset-0 z-[1] bg-black/40" />
 
         {/* Content */}
-        <div className="absolute inset-0 z-10 grid w-full grid-cols-1 items-center gap-8 px-6 py-10 sm:grid-cols-2 sm:px-10 lg:px-16 2xl:px-24">
-          <div className="flex w-full flex-col items-center justify-center text-center">
-            <Image
-              src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/logo-splash.png`}
-              alt="Dairy Fresh logo"
-              width={500}
-              height={500}
-              priority
-              className="mb-6 w-[250px] sm:w-[300px] lg:w-[400px] 2xl:w-[450px]"
-            />
 
-            <a
-              href="#orders"
-              className="mt-8 inline-flex items-center rounded-lg bg-[#0F6939] px-6 py-3 text-xl font-bold text-white shadow-lg transition-colors hover:bg-[#0a4d2a] sm:px-8 sm:py-4 sm:text-2xl"
-            >
-              অর্ডার করুন
-              <FontAwesomeIcon
-                icon={faArrowDown}
-                className="ml-3 text-lg sm:text-xl"
+        <div className="absolute inset-0 z-10">
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/logo-splash.png`}
+            alt="Dairy Fresh logo"
+            width={500}
+            height={500}
+            priority
+            className="mb-6 w-20 sm:w-40 h-auto ml-5 mt-5 sm:ml-[30px] sm:mt-[30px]"
+          />
+          <div className="container mx-auto grid w-full grid-cols-1 items-center gap-8 px-6 py-2 sm:grid-cols-2 sm:px-10 lg:px-16 2xl:px-24">
+            <div className="flex w-full flex-col items-center justify-center text-center">
+              <Image
+                src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/beef-2.jpg`}
+                alt="Dairy Fresh logo"
+                width={500}
+                height={500}
+                priority
+                className="mb-6 w-[250px] lg:w-[350px] 2xl:w-[400px]"
               />
-            </a>
-          </div>
+            </div>
 
-          <div className="flex w-full items-center justify-center">
-            <div className="w-full max-w-[600px] z-[999999] h-[400px]">
-              <ProductAdCarousel
-                order_data={data}
-                custom_preview={1}
-                custom_space={10}
-              />
+            <div className="flex w-full items-center justify-center">
+              <div className="w-full max-w-[450px] z-[999999] h-[380px] flex-col items-center justify-center text-center">
+                <ProductAdCarousel
+                  order_data={data}
+                  custom_preview={1}
+                  custom_space={10}
+                  custom_class={
+                    "w-70 h-50 sm:w-90 sm:h-100 custom-class-for-carousel"
+                  }
+                />
+
+                <a
+                  href="#orders"
+                  className="mt-8 inline-flex items-center rounded-lg bg-[#0F6939] px-6 py-3 text-xl font-bold text-white shadow-lg transition-colors hover:bg-[#0a4d2a] sm:px-8 sm:py-4 sm:text-2xl"
+                >
+                  অর্ডার করুন
+                  <FontAwesomeIcon
+                    icon={faArrowDown}
+                    className="ml-3 text-lg sm:text-xl"
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -133,7 +147,7 @@ export default async function Home() {
         <ProductAdCarousel order_data={data} />
       </section>
 
-      <section className="bg-[#14261C] py-16 sm:py-24" id="orders">
+      <section className="bg-[#14261C] py-16 sm:py-24">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
             {products.map((product) => (
@@ -155,7 +169,7 @@ export default async function Home() {
       </section>
 
       {/* Order Form */}
-      <section className="container mx-auto py-10">
+      <section className="container mx-auto py-10" id="orders">
         <h2 className="bg-[#0F6939] text-white text-center text-2xl font-bold py-5 rounded-t-xl">
           নিচের ফর্মটি পূরণ করে আপনার অর্ডার নিশ্চিত করুন
         </h2>

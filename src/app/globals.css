@@ -209,6 +209,14 @@ body {
   );
 }
 
+.custom-class-for-carousel img{
+  object-fit: contain !important;
+}
+
+.custom-class-main-carousel .swiper-wrapper .swiper-slide{
+  background-color: white !important;
+}
+
 @media print {
   body {
     margin: 0;
