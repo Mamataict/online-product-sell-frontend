@@ -21,10 +21,12 @@ import Select from "react-select";
 import PermissionGuard from "@/components/dashboard/PermissionGuard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { printReport, cleanupPrint } from "@/lib/printReport";
 
 export default function OrdersInfo() {
   const [orders, setOrders] = useState([]);
-  const [total_amount, seTotalAmount] = useState(0);
+  const [total_paid, setTotalPaid] = useState(0);
+  const [total_due, setTotalDue] = useState(0);
   const [order, setOrder] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,7 +59,7 @@ export default function OrdersInfo() {
     setLoading(true);
     try {
       const res = await api.get(
-        `/api/order?page=${page}&&start_date=${start_date}&&end_date=${end_date}&&order_id=${order_info_id}&&cus_phone=${cus_phone}&&order_status=${orderStatus}&&order_payment_status=${orderPaymentStatus}`,
+        `/api/order?page=${page}&&start_date=${start_date}&&end_date=${end_date}&&order_id=${order_info_id}&&cus_phone=${cus_phone}&&order_status=${orderStatus}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,8 +68,9 @@ export default function OrdersInfo() {
       );
 
       setOrders(res.data.data.orders.data);
-      setSerial(res.data.data.orders.from ?? 0)
-      seTotalAmount(res.data.data.total_amount);
+      setSerial(res.data.data.orders.from ?? 0);
+      setTotalPaid(res.data.data.total_paid);
+      setTotalDue(res.data.data.total_due);
       setCurrentPage(res.data.data.orders.current_page);
       setLastPage(res.data.data.orders.last_page);
     } catch (err) {
@@ -80,8 +83,6 @@ export default function OrdersInfo() {
   useEffect(() => {
     fetchOrders(1);
   }, []);
-
-  
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= lastPage) {
@@ -142,6 +143,45 @@ export default function OrdersInfo() {
 
   const toYMD = (d) =>
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+  const handlePrintInvoiceReport = async (order_id) => {
+    try {
+      await printReport({
+        path: `/api/report/sale/invoice/${order_id}`,
+        token,
+        filename: "invoice.pdf",
+        params: {
+          start_date: start_date,
+          end_date: end_date,
+          order_id: order_info_id,
+          cus_phone: cus_phone,
+          order_status: orderStatus,
+        },
+      });
+    } catch (err) {
+      console.error("Failed to print receipt:", err);
+    }
+  };
+  const handlePrintSales = async () => {
+    try {
+
+      await printReport({
+        path: `/api/report/sales`,
+        token,
+        filename: "orders.pdf",
+        params: {
+          start_date: start_date,
+          end_date: end_date,
+          order_id: order_info_id,
+          cus_phone: cus_phone,
+          order_status: orderStatus,
+        },
+      });
+      
+    } catch (error) {
+      console.error("Print error:", error);
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -303,6 +343,7 @@ export default function OrdersInfo() {
                 }}
                 value={order_info_id}
               />
+
               <input
                 id="search"
                 type="text"
@@ -324,7 +365,7 @@ export default function OrdersInfo() {
                 placeholder="Select Order Status"
                 isClearable
               />
-              <Select
+              {/* <Select
                 options={orderPaymentStatusOptions}
                 value={
                   orderPaymentStatusOptions.find(
@@ -336,13 +377,21 @@ export default function OrdersInfo() {
                 }
                 placeholder="Select Order Payment Status"
                 isClearable
-              />
+              /> */}
 
               <button
                 onClick={() => fetchOrders(1)}
                 className="px-4 py-2 h-11 bg-blue-600 rounded-lg shadow-xs text-white cursor-pointer"
               >
                 Search
+              </button>
+
+              <button
+                onClick={() => handlePrintSales()}
+                className="text-blue-600 cursor-pointer border-2 border-blue-500 rounded-xl"
+                title="Print Invoice Report"
+              >
+                <FontAwesomeIcon icon={faPrint} />
               </button>
             </div>
             {/* 
@@ -377,13 +426,14 @@ export default function OrdersInfo() {
           setCurrentPage={setCurrentPage}
           lastPage={lastPage}
           handlePageChange={handlePageChange}
-         
           fetchOrders={fetchOrders}
           order={order}
           cancelOrder={cancelOrder}
           deleteOrder={deleteOrder}
-          total_amount={total_amount}
+          total_paid={total_paid}
+          total_due={total_due}
           serial={Number(serial)}
+          handlePrintInvoiceReport={handlePrintInvoiceReport}
         />
       </div>
     </div>

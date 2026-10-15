@@ -13,7 +13,7 @@ const DEFAULT_IMAGE = process.env.NEXT_PUBLIC_API_URL
 
 export default function OrderCompletedPage() {
   const [visible, setVisible] = useState(false);
-  const [confettiPieces, setConfettiPieces] = useState([]);
+ 
   const [order_info, setOrderInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -25,12 +25,7 @@ export default function OrderCompletedPage() {
     if (!id) return;
     try {
       setLoading(true);
-      const res = await api.get(`/api/order/${id}/info`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await api.get(`/api/order/${id}/info`);
       setOrderInfo(res.data.data);
     } catch (err) {
       console.error("Order fetch error:", err?.response?.data || err.message);
@@ -46,19 +41,6 @@ export default function OrderCompletedPage() {
 
   useEffect(() => {
     setVisible(true);
-
-    const pieces = Array.from({ length: 60 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      delay: Math.random() * 2,
-      duration: 2.5 + Math.random() * 2,
-      color: ["#F04B4B", "#22C55E", "#F59E0B", "#3B82F6", "#EC4899", "#10B981", "#FBBF24"][
-        Math.floor(Math.random() * 7)
-      ],
-      size: 6 + Math.random() * 8,
-      rotation: Math.random() * 360,
-    }));
-    setConfettiPieces(pieces);
   }, []);
 
   const steps = [
@@ -261,24 +243,7 @@ export default function OrderCompletedPage() {
         }
       `}</style>
 
-      {/* Confetti */}
-      <div className="confetti-wrap">
-        {confettiPieces.map((p) => (
-          <div
-            key={p.id}
-            className="confetti-piece"
-            style={{
-              left: `${p.x}%`,
-              width: p.size,
-              height: p.size * 0.6,
-              background: p.color,
-              animationDelay: `${p.delay}s`,
-              animationDuration: `${p.duration}s`,
-              transform: `rotate(${p.rotation}deg)`,
-            }}
-          />
-        ))}
-      </div>
+  
 
       <div className={`page ${visible ? "visible" : ""}`}>
 
@@ -372,7 +337,7 @@ export default function OrderCompletedPage() {
           কোনো সমস্যায় <Link href="#">সাপোর্টে যোগাযোগ করুন</Link> অথবা ফোন করুন{" "}
           <Link href="tel:8801896025050">01896025050</Link>
           <br />
-          © {new Date().getFullYear()} <Link href="https://www.mamatabd.org" target="_blank" className="text-white hover:underline">Mamata</Link>, All rights reserved.
+          © {new Date().getFullYear()} <Link href="https://www.mamatabd.org" target="_blank" className="text-white hover:underline">Mamata</Link>, All right reserved.
         </div>
       </div>
     </>

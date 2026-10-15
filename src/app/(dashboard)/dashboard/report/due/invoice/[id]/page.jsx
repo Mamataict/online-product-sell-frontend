@@ -6,145 +6,90 @@ import Cookies from "js-cookie";
 import CheckBox from "@/components/features_cus/CheckBox";
 import { toast } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons";
+import DuePaymentModal from "@/components/due/DuePaymentModal";
+import EditDuePaymentModal from "@/components/due/EditDuePaymentModal";
+import { printReport, cleanupPrint } from "@/lib/printReport";
 
 export default function DueInvoice() {
   const [order_info, setOrderInfo] = useState([]);
+  const [due_info, setDueInfo] = useState([]);
   const [payment_via, setPaymentVia] = useState([]);
-  const [invoice, setInvoice] = useState("");
-  const [customer_name, setCustomerName] = useState("");
-  const [sale_date, setSaleDate] = useState("");
-  const [paid_amount, setPaidAmount] = useState(0);
   const [due_amount, setDueAmount] = useState(0);
-  const [due_paid_date, setDuePaidDate] = useState("");
-  const [due_pay_amount, setDuePayAmount] = useState(0);
-  const [due_paid_amount, setDuePaidAmount] = useState(0);
-  const [payment_method, setPaymentMethod] = useState("");
-  const [remark, setRemark] = useState("");
-  const [buttonPressed, setButtonPressed] = useState(false);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
+  const [buttonPressed, setButtonPressed] = useState(false);
+  const [active_due_pay, setActiveDuePay] = useState(false);
+  const [edit_due_pay_id, setEditDuePayId] = useState("");
   const { id } = useParams();
   const token = Cookies.get("auth_token");
 
-  useEffect(() => {
-    const fetchDueInfo = async () => {
-      const res = await api.get(`/api/order/due/invoice/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      setOrderInfo(res.data?.data?.order);
-      setInvoice(res.data?.data?.order?.invoice || "");
-      setCustomerName(res.data?.data?.order?.customer?.name || "");
-      setSaleDate(res.data?.data?.order?.place_date || "");
-      setPaidAmount(Number(res.data?.data?.order?.grand_total) || "");
-      setDueAmount(Number(res.data?.data?.order?.due) || 0);
-      setDuePaidDate(res.data?.data?.order?.due_paid_date || "");
-      setDuePaidAmount(Number(res.data?.data?.order?.due_paid_amount) || 0);
-      setDuePayAmount(
-        Number(res.data?.data?.order?.due_paid_amount) +
-          Number(res.data?.data?.order?.due) || 0,
-      );
-      setRemark(res.data?.data?.order?.remark || "");
-      setPaymentMethod(res.data?.data?.order?.due_payment_via?.id || "");
-      setPaymentVia(res.data?.data?.payment_vias);
-      setLoading(false);
-    };
-    fetchDueInfo();
-  }, [id, success]);
+  const fetchDueInfo = async () => {
+    const res = await api.get(`/api/order/due/invoice/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    setOrderInfo(res.data?.data?.order);
+    setDueAmount(Number(res.data?.data?.order?.due_amount) || 0);
 
-  const dueAmountFunc = (value) => {
-    // if(due_pay_amount >= Number(value))
-    // {
-    if (value <= due_pay_amount) {
-      if (value >= due_pay_amount) {
-        setDueAmount(value - due_pay_amount);
-      } else {
-        setDueAmount(due_pay_amount - value);
-      }
+    setPaymentVia(res.data?.data?.payment_vias);
 
-      setDuePaidAmount(Number(value));
-    }
-    // }
+    setLoading(false);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setButtonPressed(true);
-    setSuccess(false);
-    setError("");
+  useEffect(() => {
+    fetchDueInfo();
+  }, [id]);
 
-    const formData = new FormData();
+  const editDuePaymentInfo = async (editable_id) => {
+    const res = await api.get(`/api/order/due/payment/${editable_id}/edit`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    formData.append("due_paid_date", due_paid_date);
-    formData.append("due_paid_amount", due_paid_amount);
-    formData.append("due_amount", due_amount);
-    formData.append("payment_method", payment_method);
+    setDueInfo(res?.data?.data);
 
-    formData.append("remark", remark);
+    setEditDuePayId(res?.data?.data?.id);
+  };
 
-    formData.append("_method", "PUT");
-
+  const deleteDuePaymentInfo = async (deleteable_id) => {
+    if (!confirm("Are you sure you want to delete this item?")) {
+      return;
+    }
     try {
-      const res = await api.post(`/api/order/due/pay/${id}`, formData, {
+      setButtonPressed(true);
+      await api.delete(`/api/order/due/payment/delete/${deleteable_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 
-      toast.success(res.data.message);
-      setError("");
-      setSuccess(true);
-    } catch (err) {
-      setError(err?.response?.data);
-    } finally {
+      fetchDueInfo();
       setButtonPressed(false);
+    } catch (error) {
+      setButtonPressed(false);
+      console.error(error);
     }
   };
 
   const handlePrint = async (id) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/report/due/print/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      setButtonPressed(true);
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      const iframe = document.createElement("iframe");
-      iframe.style.position = "fixed";
-      iframe.style.right = "0";
-      iframe.style.bottom = "0";
-      iframe.style.width = "0";
-      iframe.style.height = "0";
-      iframe.style.border = "0";
-      iframe.src = url;
-
-      document.body.appendChild(iframe);
-
-      iframe.onload = () => {
-        const iframeWindow = iframe.contentWindow;
-
-        iframeWindow.focus();
-        iframeWindow.print();
-
-        // Remove only after printing is done
-        iframeWindow.onafterprint = () => {
-          document.body.removeChild(iframe);
-          URL.revokeObjectURL(url);
-        };
-      };
+      await printReport({
+        path: `/api/report/due/print/${id}`,
+        token,
+        filename: "due-report.pdf",
+        params: {},
+      });
     } catch (err) {
+      setButtonPressed(false);
       console.error("Failed to print receipt:", err);
+    } finally {
+      setButtonPressed(false);
     }
   };
 
@@ -153,51 +98,98 @@ export default function DueInvoice() {
   return (
     <>
       <div className="rounded-md shadow-md p-4 bg-white sm:w-4xl">
-        <div>
-          {error?.message && (
-            <div className="w-full pb-2 text-red-400 text-lg">
-              * {error.message}
-            </div>
-          )}
-        </div>
-
         {(order_info && (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-6">
             <div className="overflow-x-auto">
-              <table className="table-auto w-full text-left">
+              <div className="mb-8">
+                <div className="ml-auto w-full max-w-xs space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Invoice:</span>
+                    <span className="font-semibold">
+                      {order_info?.order_info_id}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Order Status:</span>
+                    <span className="font-semibold">
+                      {order_info?.status_text}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Subtotal:</span>
+                    <span>{order_info?.subtotal}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Delivery Fee:</span>
+                    <span>{order_info?.delivery_fee}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Grand Total:</span>
+                    <span>{order_info?.grand_total}</span>
+                  </div>
+
+                  <div className="flex justify-between text-sm border-t border-gray-200 pt-2">
+                    <span className="text-gray-600">Paid:</span>
+                    <span>{order_info?.total_paid}</span>
+                  </div>
+                  <div className="flex justify-between text-base font-bold border-t border-gray-300 pt-2 mt-2">
+                    <span>Due:</span>
+                    <span className="text-red-600">
+                      {order_info?.due_amount}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <table className="w-full mb-5 border border-collapse border-gray-300">
+                <thead className="my-3">
+                  <tr>
+                    <th className="p-4 border border-gray-300">Customer</th>
+                  </tr>
+                </thead>
+                <tbody className="my-3">
+                  <tr>
+                    <td className="p-4 border border-gray-300">
+                      <div>Name: {order_info?.customer?.name}</div>
+                      <div>Contact: {order_info?.customer?.phone}</div>
+                      <div>Address: {order_info?.customer?.address}</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table className="table-auto w-full text-left border border-collapse border-gray-300">
                 <thead>
                   <tr>
-                    <th className="p-4 border-b border-gray-200">Product</th>
-                    <th className="p-4 border-b border-gray-200">Qty</th>
-                    <th className="p-4 border-b border-gray-200">Price</th>
-                    <th className="p-4 border-b border-gray-200">Amount</th>
-                    <th className="p-4 border-b border-gray-200">Discount</th>
-                    <th className="p-4 border-b border-gray-200">Rec.Amt</th>
+                    <th className="p-4 border border-gray-200">Product</th>
+                    <th className="p-4 border border-gray-200">Unit</th>
+                    <th className="p-4 border border-gray-200">Qty</th>
+                    <th className="p-4 border border-gray-200">
+                      Price (1<span className="text-xs">✖</span>)
+                    </th>
+                    <th className="p-4 border border-gray-200">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {order_info?.orders?.map((order) => (
-                    <tr key={order.id} className="border-b border-gray-200">
-                      <td className="p-4 border-b border-gray-200">
-                        {order?.product_price?.product?.name}
+                    <tr key={order.id} className="border border-gray-200">
+                      <td className="p-4 border border-gray-200">
+                        {order?.product?.name}
                       </td>
 
-                      <td className="p-4 border-b border-gray-200 flex gap-4">
+                      <td className="p-4 border border-gray-200">
+                        {order?.product?.unit}
+                      </td>
+
+                      <td className="p-4 border border-gray-200">
                         {Number(order?.qty)}
                       </td>
 
-                      <td className="p-4 border-b border-gray-200">
-                        {Number(order?.price) + Number(order?.discount)}
+                      <td className="p-4 border border-gray-200">
+                        {Number(order?.price)}
                       </td>
 
-                      <td className="p-4 border-b border-gray-200">
-                        {(Number(order?.price) + Number(order?.discount)) *
-                          Number(order?.qty)}
-                      </td>
-                      <td className="p-4 border-b border-gray-200">
-                        {Number(order?.discount) * Number(order?.qty)}
-                      </td>
-                      <td className="p-4 border-b border-gray-200">
+                      <td className="p-4 border border-gray-200">
                         {Number(order?.price) * Number(order?.qty)}
                       </td>
                     </tr>
@@ -206,220 +198,90 @@ export default function DueInvoice() {
               </table>
             </div>
 
-            <div className="grid grid-cols-3 p-5 gap-4 border-2 border-gray-200 rounded-md">
-              <div>
-                <label
-                  htmlFor="invoice"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Invoice
-                </label>
-
-                <input
-                  id="invoice"
-                  type="text"
-                  name="invoice"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Invoice"
-                  value={invoice}
-                  disabled
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="customer_name"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Customer
-                </label>
-
-                <input
-                  id="customer_name"
-                  type="text"
-                  name="customer_name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Customer Name"
-                  value={customer_name}
-                  disabled
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="sale_date"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Sale Date
-                </label>
-
-                <input
-                  id="sale_date"
-                  type="text"
-                  name="sale_date"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Sale Date"
-                  value={sale_date}
-                  disabled
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="paid_amount"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Paid Amount
-                </label>
-
-                <input
-                  id="paid_amount"
-                  type="text"
-                  name="paid_amount"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Paid Amount"
-                  value={paid_amount}
-                  disabled
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="due_amount"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Due Amount
-                </label>
-
-                <input
-                  id="due_amount"
-                  type="text"
-                  name="due_amount"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Due Amount"
-                  value={due_amount}
-                  disabled
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="payment_method"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Payment Method
-                </label>
-
-                <select
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  value={payment_method}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                >
-                  <option value="">Select Payment Method</option>
-                  {payment_via.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-
-                {error?.errors?.payment_method && (
-                  <div className="w-full text-red-400 text-md pt-1">
-                    * {error?.errors?.payment_method}
-                  </div>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="due_paid_date"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Due Paid Date
-                </label>
-
-                <input
-                  id="due_paid_date"
-                  type="date"
-                  name="due_paid_date"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Due Paid Date"
-                  value={due_paid_date}
-                  onChange={(e) => {
-                    setDuePaidDate(e.target.value);
-                  }}
-                />
-
-                {error?.errors?.due_paid_date && (
-                  <div className="w-full text-red-400 text-md pt-1">
-                    * {error?.errors?.due_paid_date}
-                  </div>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="due_paid_amount"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Due Paid Amount{" "}
-                  {Number(due_pay_amount) > 0 && (
-                    <span className="text-green-500">({due_pay_amount})</span>
+            <div className="border-2 border-gray-200 rounded-md">
+              <div className="text-xl text-center py-2">Payments</div>
+              <table className="w-full border border-collapse border-gray-300">
+                <thead>
+                  <tr>
+                    <th className="border border-gray-300 px-2 py-1">Date</th>
+                    <th className="border border-gray-300 px-2 py-1">Paid</th>
+                    <th className="border border-gray-300 px-2 py-1">
+                      Payment type
+                    </th>
+                    <th className="border border-gray-300 px-2 py-1">Remark</th>
+                    <th className="border border-gray-300 px-2 py-1">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {order_info.init_pay != 0 && (
+                    <tr>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {order_info.place_date}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {order_info.init_pay}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {order_info.pay_via}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {order_info.remark}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1"></td>
+                    </tr>
                   )}
-                </label>
-
-                <input
-                  id="due_paid_amount"
-                  type="text"
-                  name="due_paid_amount"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Due Paid Amount"
-                  value={due_paid_amount}
-                  onChange={(e) => {
-                    dueAmountFunc(e.target.value);
-                  }}
-                />
-
-                {error?.errors?.due_paid_amount && (
-                  <div className="w-full text-red-400 text-md pt-1">
-                    * {error?.errors?.due_paid_amount}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="remark"
-                  className="block font-medium text-gray-700 mb-1 text-lg"
-                >
-                  Remark
-                </label>
-
-                <input
-                  id="remark"
-                  type="text"
-                  name="remark"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder="Enter Remark"
-                  value={remark}
-                  onChange={(e) => {
-                    setRemark(e.target.value);
-                  }}
-                />
-
-                {error?.errors?.remark && (
-                  <div className="w-full text-red-400 text-md pt-1">
-                    * {error?.errors?.remark}
-                  </div>
-                )}
-              </div>
+                  {order_info?.due_payments?.map((due_payment) => (
+                    <tr key={due_payment.id}>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {due_payment.due_paid_date}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {due_payment.due_paid_amount}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {due_payment.pay_via}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {due_payment.remark}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1 flex space-x-2">
+                        <button
+                          onClick={() => editDuePaymentInfo(due_payment.id)}
+                        >
+                          {" "}
+                          <FontAwesomeIcon
+                            icon={faEdit}
+                            className="cursor-pointer"
+                          />
+                        </button>
+                        <button
+                          onClick={() => deleteDuePaymentInfo(due_payment.id)}
+                          className={
+                            buttonPressed ? "opacity-60 cursor-not-allowed" : ""
+                          }
+                          disabled={buttonPressed}
+                        >
+                          {" "}
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            className="cursor-pointer"
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             <div className="flex space-x-2">
               <button
-                type="submit"
-                className={`w-full btn-primary-cus text-white py-3 text-lg font-semibold rounded-md transition duration-300 cursor-pointer ${
-                  buttonPressed ? "opacity-60 cursor-not-allowed" : ""
-                }`}
-                disabled={buttonPressed}
+                type="button"
+                className={`w-full btn-primary-cus text-white py-3 text-lg font-semibold rounded-md transition duration-300 cursor-pointer`}
+                onClick={() => setActiveDuePay(!active_due_pay)}
               >
-                {buttonPressed ? "Updating..." : "Update"}
+                Pay
               </button>
-
               <button
                 type="button"
                 className={`w-full btn-primary-cus text-white py-3 text-lg font-semibold rounded-md transition duration-300 cursor-pointer ${
@@ -431,8 +293,28 @@ export default function DueInvoice() {
                 <FontAwesomeIcon icon={faPrint} />
               </button>
             </div>
-          </form>
+          </div>
         )) || <p>No due information available.</p>}
+
+        {active_due_pay && (
+          <DuePaymentModal
+            setActiveDuePay={setActiveDuePay}
+            order_id={order_info.id}
+            payment_method={payment_via}
+            due_amount={due_amount}
+            onDuePaymentChange={fetchDueInfo}
+          />
+        )}
+        {edit_due_pay_id && (
+          <EditDuePaymentModal
+            due_info={due_info}
+            setEditDuePayId={setEditDuePayId}
+            edit_due_pay_id={edit_due_pay_id}
+            payment_method={payment_via}
+            due_amount={due_amount}
+            onDuePaymentChange={fetchDueInfo}
+          />
+        )}
       </div>
     </>
   );

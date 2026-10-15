@@ -31,7 +31,8 @@ export default function List({
   deleteOrder,
   handlePrint,
   handlePrintInvoiceReport,
-  total_amount,
+  total_paid,
+  total_due,
   serial,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,27 +40,27 @@ export default function List({
   return (
     <>
       <div className="overflow-x-auto">
-        <table className=" w-[1200px] ">
+        <table className="table-fixed ">
           <thead>
             <tr>
-              <th className="p-4 border-b border-gray-200">SL.</th>
-              <th className="p-4 border-b border-gray-200">Order ID</th>
+              <th className="p-4 border-b border-gray-200 w-5">SL.</th>
+              <th className="p-4 border-b border-gray-200 w-20">Order ID</th>
 
-              <th className="p-4 border-b border-gray-200">Status</th>
+              <th className="p-4 border-b border-gray-200 w-10">Status</th>
 
-              <th className="p-4 border-b border-gray-200">Customer</th>
-              <th className="p-4 border-b border-gray-200">
+              <th className="p-4 border-b border-gray-200 w-20">Customer</th>
+              <th className="p-4 border-b border-gray-200 w-20">
                 Customer Phone Number
               </th>
-              <th className="p-4 border-b border-gray-200">Place Date</th>
-              <th className="p-4 border-b border-gray-200 w-64" >Order Items</th>
+              <th className="p-4 border-b border-gray-200 w-10">Place Date</th>
+              <th className="p-4 border-b border-gray-200 w-64">Order Items</th>
 
-              <th className="p-4 border-b border-gray-200">Amount</th>
+              <th className="p-4 border-b border-gray-200 w-7">Delivery Fee</th>
+              <th className="p-4 border-b border-gray-200 w-20">Paid</th>
+              <th className="p-4 border-b border-gray-200 w-20">Due</th>
 
-              <th className="p-4 border-b border-gray-200">Payment Status</th>
-
-              <th className="p-4 border-b border-gray-200">Handler</th>
-              <th className="p-4 border-b border-gray-200">Remark</th>
+              {/* <th className="p-4 border-b border-gray-200 w-32">Handler</th> */}
+              <th className="p-4 border-b border-gray-200 w-32">Remark</th>
 
               <th className="p-4 border-b border-gray-200">Actions</th>
             </tr>
@@ -67,7 +68,9 @@ export default function List({
           <tbody>
             {orders.map((order, index) => (
               <tr key={order.id} className="border-b border-gray-200">
-                <td className="p-4 border-b border-gray-200">{serial + index}</td>
+                <td className="p-4 border-b border-gray-200">
+                  {serial + index}
+                </td>
                 <td className="p-4 border-b border-gray-200">
                   {order.order_info_id}
                 </td>
@@ -96,35 +99,32 @@ export default function List({
                   {order.place_date?.toString()}
                 </td>
 
-                <td className="p-4 border-b border-gray-200 w-64" >
+                <td className="p-4 border-b border-gray-200 w-64">
                   {order?.orders?.map((item) => (
                     <div key={item.id} className="break-words">
-                      {item.product?.name} - {item.product?.unit} - ({Number(item.qty)}) -{" "}
+                      {item.product?.name} - {item.product?.unit} - (
+                      {Number(item.qty)}) -{" "}
                       {Number(item.qty) * Number(item.price)} BDT
                     </div>
                   ))}
                 </td>
                 <td className="p-4 border-b border-gray-200">
-                  {order.grand_total}
+                  {Number(order.delivery_fee)}
                 </td>
-
-                <td
-                  className={`p-4 border-b border-gray-200 ${
-                    order.payment_status == 1
-                      ? "text-amber-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  {order.payment_status_text}
+                <td className="p-4 border-b border-gray-200">
+                  {order.total_paid}
                 </td>
-
+                <td className="p-4 border-b border-gray-200">
+                  {order.due_amount}
+                </td>
+                {/* 
                 <td className="p-4 border-b border-gray-200">
                   {order.handler && (
                     <>
                       {order.handler?.name} ({order.handler?.username})
                     </>
                   )}
-                </td>
+                </td> */}
 
                 <td className="p-4 border-b border-gray-200">{order.remark}</td>
 
@@ -148,13 +148,6 @@ export default function List({
                             SLIP
                           </button>
                           |
-                          <button
-                            onClick={() => handlePrintInvoiceReport(order.id)}
-                            className="text-blue-600 cursor-pointer"
-                            title="Print Invoice Report"
-                          >
-                            <FontAwesomeIcon icon={faPrint} />
-                          </button>
                           {/* {hasPermission(["order.cancel"]) && (
                             <>
                               <span className="text-gray-400">|</span>
@@ -171,6 +164,14 @@ export default function List({
                         |
                       </>
                     )}
+                    <button
+                      onClick={() => handlePrintInvoiceReport(order.id)}
+                      className="text-blue-600 cursor-pointer"
+                      title="Print Invoice Report"
+                    >
+                      <FontAwesomeIcon icon={faPrint} />
+                    </button>
+                    |
                     <PermissionGuard permission={"order.update"}>
                       <>
                         <Link
@@ -179,13 +180,8 @@ export default function List({
                         >
                           <FontAwesomeIcon icon={faEdit} />
                         </Link>
-                        
                       </>
                     </PermissionGuard>
-
-                 
-
-
                     <PermissionGuard permission={"order.destroy"}>
                       <>
                         <span className="text-gray-400">|</span>
@@ -206,11 +202,12 @@ export default function List({
 
           <tfoot>
             <tr className="border-b border-gray-200">
-              <td className="p-4 border-b border-gray-200" colSpan={7}>
+              <td className="p-4 border-b border-gray-200" colSpan={8}>
                 Total
               </td>
 
-              <td className="p-4 border-b border-gray-200">{total_amount}</td>
+              <td className="p-4 border-b border-gray-200">{total_paid}</td>
+              <td className="p-4 border-b border-gray-200">{total_due}</td>
             </tr>
           </tfoot>
         </table>
@@ -257,8 +254,6 @@ export default function List({
           Next
         </a>
       </div>
-
-    
     </>
   );
 }

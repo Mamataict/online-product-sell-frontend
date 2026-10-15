@@ -42,7 +42,6 @@ export default function List({
               <th className="p-4 border-b border-gray-200">SL.</th>
               <th className="p-4 border-b border-gray-200">Date</th>
               <th className="p-4 border-b border-gray-200">Invoice</th>
-              <th className="p-4 border-b border-gray-200">Payment Status</th>
               <th className="p-4 border-b border-gray-200">Customer</th>
               <th className="p-4 border-b border-gray-200">Qty</th>
               <th className="p-4 border-b border-gray-200">Amount</th>
@@ -62,9 +61,6 @@ export default function List({
 
                 <td className="p-4 border-b border-gray-200">
                   {order.order_info?.order_info_id}
-                </td>
-                <td className="p-4 border-b border-gray-200">
-                  {order.order_info?.payment_status_text}
                 </td>
               
                 <td className="p-4 border-b border-gray-200">
@@ -171,7 +167,7 @@ export default function List({
           </tbody>
           <tfoot>
             <tr>
-              <td className="p-4 border-b border-gray-200 font-bold" colSpan={5}>Total: </td>
+              <td className="p-4 border-b border-gray-200 font-bold" colSpan={4}>Total: </td>
               <td className="p-4 border-b border-gray-200">{Number(total_qty).toFixed(2)} </td>
               <td className="p-4 border-b border-gray-200">{Number(total_price).toFixed(2)} </td>
               <td className="p-4 border-b border-gray-200"></td>

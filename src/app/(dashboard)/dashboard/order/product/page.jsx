@@ -15,8 +15,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { printReport, cleanupPrint } from "@/lib/printReport";
 
 export default function SoldProduct() {
-  const [total_qty, setTotalQty] = useState([]);
-  const [total_price, setTotalPrice] = useState([]);
+  const [total_qty, setTotalQty] = useState(0);
+  const [total_price, setTotalPrice] = useState(0);
   const [product_categories, setProductCategories] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [products, setProducts] = useState([]);

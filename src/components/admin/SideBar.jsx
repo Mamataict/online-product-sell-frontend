@@ -412,13 +412,13 @@ const SideBar = () => {
                   Due Report
                 </Link>
 
-                <Link
+                {/* <Link
                   href="/dashboard/report/discount"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
                   Discount Report
-                </Link>
-
+                </Link> */}
+{/* 
                 <div>
                   <button
                     onClick={() => toggleSubMenu("customer_due_report")}
@@ -453,7 +453,7 @@ const SideBar = () => {
                       </Link>
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
             )}
           </div>

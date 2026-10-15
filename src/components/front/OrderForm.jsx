@@ -102,6 +102,8 @@ export default function OrderForm({ order_data }) {
   const total = subtotal + Number(shippingCost);
 
   const handleOrderConfirm = async () => {
+    if (submitting) return;
+
     if (cart.length === 0)
       return toast.error("Please select at least one product");
     if (!form.name.trim()) return toast.error("Name is required");
@@ -132,18 +134,21 @@ export default function OrderForm({ order_data }) {
 
       if (res.data.status === false) {
         toast.error(res.data.message);
-      } else {
-        const route = res?.data?.route;
-        if (!route) {
-          toast.error("Something went wrong. Please try again.");
-          return;
-        }
-        router.push(`/order/${route}`);
+        setSubmitting(false);
+        return;
       }
+
+      const route = res?.data?.route;
+      if (!route) {
+        toast.error("Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      router.push(`/order/${route}`);
     } catch (error) {
       console.error("Order error:", error?.response?.data || error.message);
       toast.error("Something went wrong. Please try again.");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -461,10 +466,7 @@ export default function OrderForm({ order_data }) {
                     height={20}
                     priority
                   />
-                  <div>
-
-                  Cash on delivery (COD)
-                  </div>
+                  <div>Cash on delivery (COD)</div>
                 </div>
                 <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4 flex space-x-2">
                   {/* <FontAwesomeIcon
@@ -479,7 +481,9 @@ export default function OrderForm({ order_data }) {
                     height={50}
                     priority
                   />
-                  <div>বিকাশ-{order_data.bkash}(পার্সনাল) - সেন্ড মানি করুন</div>
+                  <div>
+                    বিকাশ-{order_data.bkash}(পার্সনাল) - সেন্ড মানি করুন
+                  </div>
                 </div>
               </div>
 

@@ -33,6 +33,7 @@ export default function OrderDetails() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [delivery_fee, setDeliveryFee] = useState(0);
+  const [adv_paid_amount, setAdvPaidAmount] = useState(0);
   const [edit_delivery_fee, setEditDeliveryFee] = useState(false);
   const [edit_item_qty, setEditItemQty] = useState(false);
   const [quantities, setQuantities] = useState({});
@@ -40,6 +41,8 @@ export default function OrderDetails() {
   const [customer_name, setCustomerName] = useState("");
   const [customer_phone, setCustomerPhone] = useState("");
   const [customer_address, setCustomerAddress] = useState("");
+  const [pay_vias, setPayVias] = useState({});
+  const [payment_method, setPaymentMethod] = useState('');
 
   const fetchOrder = async () => {
     setLoading(true);
@@ -49,13 +52,15 @@ export default function OrderDetails() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setOrder(res.data.data);
-
-      setRemark(res.data.data.remark ?? "");
-      setDeliveryFee(Number(res.data.data.delivery_fee ?? 0));
-      setCustomerName(res.data.data.customer?.name ?? "");
-      setCustomerPhone(res.data.data.customer?.phone ?? "");
-      setCustomerAddress(res.data.data.customer?.address ?? "");
+      setOrder(res.data.data?.order);
+      setAdvPaidAmount(res.data.data.order?.init_pay);
+      setRemark(res.data.data.order.remark ?? "");
+      setDeliveryFee(Number(res.data.data.order.delivery_fee ?? 0));
+      setCustomerName(res.data.data.order.customer?.name ?? "");
+      setCustomerPhone(res.data.data.order.customer?.phone ?? "");
+      setCustomerAddress(res.data.data.order.customer?.address ?? "");
+      setPaymentMethod(res.data.data.order?.pay_via ?? "");
+      setPayVias(res.data.data?.payment_vias);
     } catch (err) {
       setError(err?.response?.data);
     } finally {
@@ -243,6 +248,34 @@ export default function OrderDetails() {
     }));
   };
 
+  const savePayment = async () => {
+    setLoading(true);
+
+    try {
+      const res = await api.put(
+        `/api/order/${id}/advance/payment`,
+        {
+          adv_paid_amount: adv_paid_amount,
+          payment_method: payment_method
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success(res.data.message);
+      fetchOrder(id);
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || "Failed to update payment info",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="">
       {loading ? (
@@ -346,6 +379,18 @@ export default function OrderDetails() {
                   ৳ {Number(order?.grand_total)}
                 </p>
               </div>
+              <div className="bg-slate-50 border rounded-xl p-5 text-center">
+                <p className="text-sm text-gray-500 mb-1">Paid</p>
+                <p className="text-2xl font-bold text-gray-800">
+                  ৳ {Number(order?.total_paid)}
+                </p>
+              </div>
+              <div className="bg-slate-50 border rounded-xl p-5 text-center">
+                <p className="text-sm text-gray-500 mb-1">Due</p>
+                <p className="text-2xl font-bold text-gray-800">
+                  ৳ {Number(order?.due_amount)}
+                </p>
+              </div>
             </div>
 
             {/* Order Items */}
@@ -440,9 +485,7 @@ export default function OrderDetails() {
                         icon={faPlus}
                         className="ml-2 cursor-pointer rotate-45"
                         onClick={() => {
-                          (
-                            setEditCustomerInfo(false), fetchOrder(id)
-                          );
+                          (setEditCustomerInfo(false), fetchOrder(id));
                         }}
                       />
                       <FontAwesomeIcon
@@ -504,7 +547,7 @@ export default function OrderDetails() {
                   </p>
                 </div>
               </div>
-              <div className="border rounded-xl p-4 bg-slate-50">
+              {/* <div className="border rounded-xl p-4 bg-slate-50">
                 <h4 className="font-semibold text-gray-800 mb-2">Handler</h4>
                 <div className="space-y-1 text-sm text-gray-700">
                   <p>
@@ -539,7 +582,7 @@ export default function OrderDetails() {
                     {order?.remarker?.email}
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               <div>
                 <label className="block font-medium text-gray-700 mb-1 text-lg">
@@ -561,6 +604,65 @@ export default function OrderDetails() {
               </div>
             </section>
 
+            <section className="flex flex-col gap-3 sm:flex-row sm:items-end p-6 w-md">
+              <div className="flex-1">
+                <label
+                  htmlFor="adv_paid_amount"
+                  className="mb-1 block text-sm font-medium text-gray-700"
+                >
+                  Paid Amount
+                </label>
+
+                <div className="relative">
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                    ৳
+                  </span>
+                  <input
+                    id="adv_paid_amount"
+                    name="adv_paid_amount"
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    autoComplete="off"
+                    value={adv_paid_amount}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (/^\d*\.?\d{0,2}$/.test(v)) setAdvPaidAmount(v);
+                    }}
+                    className="w-full rounded-lg border border-gray-300 py-2.5 pl-8 pr-3 text-gray-900 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/30"
+                  />
+                </div>
+              </div>
+
+              <div>
+              <label className="block text-sm font-medium mb-1">
+                Payment By
+              </label>
+              <select
+                className="w-full px-3 py-3 border rounded-2xl border-gray-300 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/30"
+                value={payment_method}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                required
+              >
+
+                {pay_vias.map((method, index) => (
+                  <option key={index} value={method}>
+                    {method}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+              <button
+                type="submit"
+                disabled={!adv_paid_amount || Number(adv_paid_amount) <= 0}
+                className="rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500/40 disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={() => savePayment()}
+              >
+                Save
+              </button>
+            </section>
+
             <section className="sm:flex gap-2 p-6">
               {Object.entries(status).map(([key, value]) => (
                 <label
@@ -578,7 +680,7 @@ export default function OrderDetails() {
                 </label>
               ))}
             </section>
-            <section className="sm:flex gap-2 p-6">
+            {/* <section className="sm:flex gap-2 p-6">
               {Object.entries(payment_status).map(([key, value]) => (
                 <label
                   className="flex items-center gap-2 cursor-pointer"
@@ -594,7 +696,7 @@ export default function OrderDetails() {
                   <div>{value}</div>
                 </label>
               ))}
-            </section>
+            </section> */}
 
             {/* Footer */}
             <div className="flex justify-end px-6 py-4 border-t bg-gray-50">

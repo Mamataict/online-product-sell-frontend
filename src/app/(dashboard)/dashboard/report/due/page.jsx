@@ -4,8 +4,6 @@ import api from "@/lib/axios";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { AuthContext } from "@/context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -13,38 +11,35 @@ import {
   faPrint,
   faWrench,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "@/hooks/useAuth";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { printReport, cleanupPrint } from "@/lib/printReport";
+import Select from "react-select";
 
-export default function Campaign() {
+export default function DueReport() {
   const [due_reports, setDueReports] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const token = Cookies.get("auth_token");
   const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const searchParams = useSearchParams();
-  const user_cus = searchParams.get("user");
-  const [user, setUser] = useState(user_cus);
+  const [invoice, setInvoice] = useState("");
   const [openMore, setOpenMore] = useState(false);
 
   const today = new Date();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(today.getDate() - 30);
 
-  const [start_date, setStartDate] = useState(
-    thirtyDaysAgo.toISOString().slice(0, 10),
-  );
+  const [start_date, setStartDate] = useState(today.toISOString().slice(0, 10));
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
+
+  const [orderStatus, setOrderStatus] = useState(2);
 
   const fetchDueReport = async (page = 1) => {
     setLoading(true);
 
     try {
       const res = await api.get(
-        `/api/report/due?page=${page} && 
-        search=${searchTerm} &&
-        start_date=${start_date} &&
-        end_date=${end_date}
+        `/api/report/due?page=${page}&invoice=${invoice}&start_date=${start_date}&end_date=${end_date}&order_status=${orderStatus}
         `,
         {
           headers: {
@@ -53,9 +48,9 @@ export default function Campaign() {
         },
       );
 
-      setDueReports(res.data.data.data);
-      setCurrentPage(res.data.data.current_page);
-      setLastPage(res.data.data.last_page);
+      setDueReports(res.data.data);
+      setCurrentPage(res.data.data.orders.data.current_page);
+      setLastPage(res.data.data.orders.data.last_page);
     } catch (err) {
       setError(err?.response?.data);
     } finally {
@@ -64,139 +59,125 @@ export default function Campaign() {
   };
 
   useEffect(() => {
-    if (!user_cus) {
-      setUser(null);
-    }
-  }, [user_cus]);
-
-  useEffect(() => {
-    setCurrentPage(1);
     fetchDueReport(1);
-  }, [start_date, end_date, searchTerm]);
+  }, []);
+
+  const clickSearch = () => {
+    fetchDueReport(1);
+  };
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= lastPage) {
-      setCurrentPage(newPage);
       fetchDueReport(newPage);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure?");
-    if (!confirm) return;
-
-    try {
-      const res = await api.delete(`/api/campaign/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      toast.success(res.data.message);
-      fetchDueReport(currentPage);
-    } catch (err) {
-      toast.error("Failed to delete");
-    }
-  };
-
-  const handleActivation = async (id) => {
-    const confirm = window.confirm("Are you sure?");
-    if (!confirm) return;
-
-    try {
-      const res = await api.put(
-        `/api/campaign/${id}/activation`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      toast.success(res.data.message);
-      fetchDueReport(currentPage);
-    } catch (err) {
-      toast.error("Failed to change status");
     }
   };
 
   const handlePrint = async (id) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/report/due/print/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await printReport({
+        path: `/api/report/due/print/${id}`,
+        token,
+        filename: "due-report.pdf",
+        params: {
+          start_date,
+          end_date,
+          invoice,
+          order_status: orderStatus
         },
-      );
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      const iframe = document.createElement("iframe");
-      iframe.style.position = "fixed";
-      iframe.style.right = "0";
-      iframe.style.bottom = "0";
-      iframe.style.width = "0";
-      iframe.style.height = "0";
-      iframe.style.border = "0";
-      iframe.src = url;
-
-      document.body.appendChild(iframe);
-
-      iframe.onload = () => {
-        const iframeWindow = iframe.contentWindow;
-
-        iframeWindow.focus();
-        iframeWindow.print();
-
-        // Remove only after printing is done
-        iframeWindow.onafterprint = () => {
-          document.body.removeChild(iframe);
-          URL.revokeObjectURL(url);
-        };
-      };
+      });
+    } catch (err) {
+      console.error("Failed to print receipt:", err);
+    }
+  };
+  const handleDuePrint = async () => {
+    try {
+      await printReport({
+        path: `/api/report/orders/due/print/`,
+        token,
+        filename: "due-report.pdf",
+        params: {
+          start_date,
+          end_date,
+          invoice,
+          order_status: orderStatus
+        },
+      });
     } catch (err) {
       console.error("Failed to print receipt:", err);
     }
   };
 
+  const orderStatusOptions = [
+    { value: 2, label: "Confirmed" },
+    { value: 3, label: "Delivered" },
+  ];
+
+  const toDateString = (date) => {
+    if (!date) return "";
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   return (
-    <div className="max-w-3xl p-4 bg-white rounded-md shadow-md">
+    <div className="max-w-5xl p-4 bg-white rounded-md shadow-md">
       <div>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           <input
             id="search"
             type="text"
-            placeholder="Invoice Or Phone Number..."
-            className="min-w-xs px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            placeholder="Invoice number"
+            className=" px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             onChange={(e) => {
-              setSearchTerm(e.target.value);
+              setInvoice(e.target.value);
             }}
           />
 
-          <input
-            id="date"
-            type="date"
-            placeholder="Search by date..."
-            className=" px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            onChange={(e) => {
-              setStartDate(e.target.value);
-            }}
-            value={start_date}
+          <DatePicker
+            selected={start_date ? new Date(start_date) : null}
+            onChange={(date) => setStartDate(toDateString(date))}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="Search by date..."
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            wrapperClassName="w-full"
+            portalId="datepicker-portal"
           />
-          <input
-            id="date"
-            type="date"
-            placeholder="Search by date..."
-            className=" px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            onChange={(e) => {
-              setEndDate(e.target.value);
-            }}
-            value={end_date}
+          <DatePicker
+            selected={end_date ? new Date(end_date) : null}
+            onChange={(date) => setEndDate(toDateString(date))}
+            dateFormat="dd/MM/yyyy"
+            placeholderText="Search by date..."
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg shadow-xs transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            wrapperClassName="w-full"
+            portalId="datepicker-portal"
           />
+
+          <Select
+            options={orderStatusOptions}
+            value={
+              orderStatusOptions.find((opt) => opt.value === orderStatus) || ""
+            }
+            onChange={(selected) => setOrderStatus(selected?.value || "")}
+            placeholder="Select Order Status"
+            isClearable
+          />
+
+          <button
+            type="button"
+            onClick={clickSearch}
+            className="p-2 bg-blue-500 rounded-lg text-white h-10 cursor-pointer"
+          >
+            Search
+          </button>
+
+          <button
+            onClick={() => handleDuePrint()}
+            className="text-blue-600 cursor-pointer border-2  h-10 border-blue-500 rounded-xl"
+            title="Print Invoice Report"
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </button>
         </div>
       </div>
 
@@ -213,31 +194,31 @@ export default function Campaign() {
             </tr>
           </thead>
           <tbody>
-            {due_reports.map((due_info) => (
+            {due_reports?.orders?.data?.map((due_info) => (
               <tr key={due_info.id} className="border-b border-gray-200">
                 <td className="p-4 border-b border-gray-200">
                   {due_info.place_date.toString()}
                 </td>
 
-                <td className="p-4 border-b border-gray-200 flex gap-4">
-                  {due_info.invoice}
+                <td className="p-4 border-b border-gray-200">
+                  {due_info.order_info_id}
                 </td>
 
                 <td className="p-4 border-b border-gray-200">
-                  {due_info.customer.name}
+                  {due_info.customer.name} ({due_info.customer.phone})
                 </td>
-                
+
                 <td className="p-4 border-b border-gray-200">
                   {Number(due_info.due_paid_amount)}
                 </td>
                 <td className="p-4 border-b border-gray-200">
                   {Number(due_info.due_amount)}
                 </td>
-              
+
                 <td className=" p-4 border-b border-gray-200">
                   <div className="flex gap-2">
                     <Link
-                      href={`/dashboard/report/due/invoice/${due_info.order_id}`}
+                      href={`/dashboard/report/due/invoice/${due_info.id}`}
                       className="text-blue-600 hover:underline"
                     >
                       <FontAwesomeIcon icon={faWrench} />
@@ -259,6 +240,15 @@ export default function Campaign() {
               </tr>
             ))}
           </tbody>
+
+          <tfoot>
+            <tr className="border-b border-gray-200">
+              <td className="p-4 border-b border-gray-200" colSpan={3}>Total:</td>
+              <td className="p-4 border-b border-gray-200">{due_reports?.total_due_paid}</td>
+              <td className="p-4 border-b border-gray-200">{due_reports?.total_due_remaining}</td>
+              <td className="p-4 border-b border-gray-200"></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
