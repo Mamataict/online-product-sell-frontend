@@ -412,48 +412,33 @@ const SideBar = () => {
                   Due Report
                 </Link>
 
-                {/* <Link
-                  href="/dashboard/report/discount"
+               
+              </div>
+            )}
+          </div>
+        )}
+
+        {hasAnyPermission(["banner.index"]) && (
+          <div>
+            <button
+              onClick={() => toggleMenu("banner")}
+              className="flex justify-between w-full px-4 py-3 admin-sidebar-menu rounded"
+            >
+              Banner
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className={arrowClass("banner")}
+              />
+            </button>
+
+            {openMenu === "banner" && (
+              <div className="pl-6 space-y-1 mt-2">
+                <Link
+                  href="/dashboard/banner/"
                   className="block px-2 py-2 admin-sidebar-menu rounded"
                 >
-                  Discount Report
-                </Link> */}
-{/* 
-                <div>
-                  <button
-                    onClick={() => toggleSubMenu("customer_due_report")}
-                    className="flex justify-between w-full px-4 py-3 admin-sidebar-menu rounded"
-                  >
-                    Customer
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className={arrowClassSub("customer_due_report")}
-                    />
-                  </button>
-
-                  {openSubMenu === "customer_due_report" && (
-                    <div className="pl-6 space-y-1 mt-2">
-                      <Link
-                        href="/dashboard/report/customer/transaction"
-                        className="block px-2 py-2 admin-sidebar-menu rounded"
-                      >
-                        Transaction Report
-                      </Link>
-                      <Link
-                        href="/dashboard/report/customer/due"
-                        className="block px-2 py-2 admin-sidebar-menu rounded"
-                      >
-                        Due Report
-                      </Link>
-                      <Link
-                        href="/dashboard/report/customer/discount"
-                        className="block px-2 py-2 admin-sidebar-menu rounded"
-                      >
-                        Discount Report
-                      </Link>
-                    </div>
-                  )}
-                </div> */}
+                  Banner
+                </Link>
               </div>
             )}
           </div>

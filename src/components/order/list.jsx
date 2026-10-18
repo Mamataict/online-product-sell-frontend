@@ -39,30 +39,26 @@ export default function List({
 
   return (
     <>
-      <div className="overflow-x-auto">
-        <table className="table-fixed ">
+      <div className="overflow-x-auto w-full">
+        <table className="w-full min-w-[1600px] table-fixed border-collapse">
           <thead>
             <tr>
-              <th className="p-4 border-b border-gray-200 w-5">SL.</th>
-              <th className="p-4 border-b border-gray-200 w-20">Order ID</th>
-
-              <th className="p-4 border-b border-gray-200 w-10">Status</th>
-
-              <th className="p-4 border-b border-gray-200 w-20">Customer</th>
-              <th className="p-4 border-b border-gray-200 w-20">
+              <th className="w-14 p-3 border-b border-gray-200">SL.</th>
+              <th className="w-24 p-3 border-b border-gray-200">Order ID</th>
+              <th className="w-28 p-3 border-b border-gray-200">Status</th>
+              <th className="w-36 p-3 border-b border-gray-200">Customer</th>
+              <th className="w-40 p-3 border-b border-gray-200">
                 Customer Phone Number
               </th>
-              <th className="p-4 border-b border-gray-200 w-10">Place Date</th>
-              <th className="p-4 border-b border-gray-200 w-64">Order Items</th>
-
-              <th className="p-4 border-b border-gray-200 w-7">Delivery Fee</th>
-              <th className="p-4 border-b border-gray-200 w-20">Paid</th>
-              <th className="p-4 border-b border-gray-200 w-20">Due</th>
-
-              {/* <th className="p-4 border-b border-gray-200 w-32">Handler</th> */}
-              <th className="p-4 border-b border-gray-200 w-32">Remark</th>
-
-              <th className="p-4 border-b border-gray-200">Actions</th>
+              <th className="w-32 p-3 border-b border-gray-200">Place Date</th>
+              <th className="w-80 p-3 border-b border-gray-200">Order Items</th>
+              <th className="w-28 p-3 border-b border-gray-200">
+                Delivery Fee
+              </th>
+              <th className="w-24 p-3 border-b border-gray-200">Paid</th>
+              <th className="w-24 p-3 border-b border-gray-200">Due</th>
+              <th className="w-40 p-3 border-b border-gray-200">Remark</th>
+              <th className="w-32 p-3 border-b border-gray-200">Actions</th>
             </tr>
           </thead>
           <tbody>

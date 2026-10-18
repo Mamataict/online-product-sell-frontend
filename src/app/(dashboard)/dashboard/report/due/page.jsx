@@ -48,9 +48,9 @@ export default function DueReport() {
         },
       );
 
-      setDueReports(res.data.data);
-      setCurrentPage(res.data.data.orders.data.current_page);
-      setLastPage(res.data.data.orders.data.last_page);
+      setDueReports(res.data?.data);
+      setCurrentPage(res.data?.data?.orders?.data?.current_page);
+      setLastPage(res.data?.data?.orders?.data?.last_page);
     } catch (err) {
       setError(err?.response?.data);
     } finally {
@@ -82,7 +82,7 @@ export default function DueReport() {
           start_date,
           end_date,
           invoice,
-          order_status: orderStatus
+          order_status: orderStatus,
         },
       });
     } catch (err) {
@@ -99,7 +99,7 @@ export default function DueReport() {
           start_date,
           end_date,
           invoice,
-          order_status: orderStatus
+          order_status: orderStatus,
         },
       });
     } catch (err) {
@@ -243,9 +243,15 @@ export default function DueReport() {
 
           <tfoot>
             <tr className="border-b border-gray-200">
-              <td className="p-4 border-b border-gray-200" colSpan={3}>Total:</td>
-              <td className="p-4 border-b border-gray-200">{due_reports?.total_due_paid}</td>
-              <td className="p-4 border-b border-gray-200">{due_reports?.total_due_remaining}</td>
+              <td className="p-4 border-b border-gray-200" colSpan={3}>
+                Total:
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {due_reports?.total_due_paid}
+              </td>
+              <td className="p-4 border-b border-gray-200">
+                {due_reports?.total_due_remaining}
+              </td>
               <td className="p-4 border-b border-gray-200"></td>
             </tr>
           </tfoot>
@@ -253,45 +259,51 @@ export default function DueReport() {
       </div>
 
       <div className="flex justify-evenly items-center mt-4">
-        <a
-          href="#"
-          role="button"
-          onClick={(e) => {
-            e.preventDefault();
-            handlePageChange(currentPage - 1);
-          }}
-          disabled={currentPage === 1}
-          className="disabled:opacity-50 text-blue-950 underline"
+        <button
+          type="button"
+          onClick={() => handlePageChange(Number(currentPage) - 1)}
+          disabled={Number(currentPage) <= 1}
+          className="text-blue-950 underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
-        </a>
+        </button>
 
-        <span>
-          Page{" "}
+        <span className="flex items-center gap-2">
+          Page
           <input
-            type="text"
+            type="number"
+            min={1}
+            max={lastPage}
+            value={currentPage ?? 1}
             onChange={(e) => {
-              e.preventDefault();
-              setCurrentPage(e.target.value);
+              const value = e.target.value;
+
+              if (value === "") return;
+
+              const page = Number(value);
+
+              if (page >= 1 && page <= lastPage) {
+                setCurrentPage(page);
+              }
             }}
-            value={currentPage}
-            className="p-1 text-center w-8 border-2 border-gray-400 rounded-xl"
-          />{" "}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handlePageChange(Number(currentPage));
+              }
+            }}
+            className="p-1 text-center w-14 border-2 border-gray-400 rounded-xl"
+          />
           of {lastPage}
         </span>
 
-        <a
-          href="#"
-          role="button"
-          onClick={(e) => {
-            e.preventDefault();
-            handlePageChange(currentPage + 1);
-          }}
-          disabled={currentPage === lastPage}
-          className="disabled:opacity-50 text-blue-950 underline"
+        <button
+          type="button"
+          onClick={() => handlePageChange(Number(currentPage) + 1)}
+          disabled={Number(currentPage) >= lastPage}
+          className="text-blue-950 underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
-        </a>
+        </button>
       </div>
     </div>
   );

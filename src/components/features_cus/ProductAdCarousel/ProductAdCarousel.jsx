@@ -29,7 +29,7 @@ export default function ProductAdCarousel({ order_data, custom_preview = null, c
         1024: { slidesPerView: custom_preview ?? 3, spaceBetween: custom_space ?? 30 },
       }}
     >
-      {products.map((product, index) => (
+      {products?.map((product, index) => (
         <SwiperSlide key={product.id}>
           <div className={`relative w-full h-full shadow-md overflow-hidden ` + (custom_class || '')}>
             <Image

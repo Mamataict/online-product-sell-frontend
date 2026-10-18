@@ -23,47 +23,45 @@ export default function DashboardPage() {
   const token = Cookies.get("auth_token");
 
   useEffect(() => {
-  if (!token) return;
+    if (!token) return;
 
-  const fetchDashboardInfo = async () => {
-    try {
-      const res = await api.get("/api/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setData(res.data.data);
-    } catch (err) {
-      
-      setError(err?.response?.data || "Failed to fetch dashboard info");
-    }
-  };
+    const fetchDashboardInfo = async () => {
+      try {
+        const res = await api.get("/api/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setData(res.data.data);
+      } catch (err) {
+        setError(err?.response?.data || "Failed to fetch dashboard info");
+      }
+    };
 
-  fetchDashboardInfo();
-}, [token]);
+    fetchDashboardInfo();
+  }, [token]);
 
   return (
     <>
-      
-          <div className="container mx-auto">
-            <div className="grid sm:grid-cols-3 gap-4 max-w-6xl">
-              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
-                <div className="mb-4 space-y-6">
-                  <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Orders
-                  </label>
-                  <div className="text-3xl">{data?.total_orders ?? ""}</div>
-                </div>
-                {/* <div className="text-sm mt-6">
+      <div className="container mx-auto">
+        <div className="grid sm:grid-cols-3 gap-4 max-w-6xl">
+          <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+            <div className="mb-4 space-y-6">
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Orders
+              </label>
+              <div className="text-3xl">{data?.total_orders ?? ""}</div>
+            </div>
+            {/* <div className="text-sm mt-6">
                   <FontAwesomeIcon
                     icon={faBriefcase}
                     className="text-green-500 mr-1"
                   />
                   Total orders in the last 30 days
                 </div> */}
-              </div>
+          </div>
 
-              {/* <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+          {/* <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
                     Paid Amount
@@ -98,68 +96,68 @@ export default function DashboardPage() {
                 </div> 
               </div> */}
 
-              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
-                <div className="mb-4 space-y-6">
-                  <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Pending
-                  </label>
-                  <div className="text-3xl">{data?.total_pending ?? ""}</div>
-                </div>
-                {/* <div className="text-sm mt-6">
+          <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+            <div className="mb-4 space-y-6">
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Pending
+              </label>
+              <div className="text-3xl">{data?.total_pending ?? ""}</div>
+            </div>
+            {/* <div className="text-sm mt-6">
                   <FontAwesomeIcon
                     icon={faUsers}
                     className="text-green-500 mr-1"
                   />
                   Last 30 days customers count
                 </div> */}
-              </div>
-              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
-                <div className="mb-4 space-y-6">
-                  <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Confirmed
-                  </label>
-                  <div className="text-3xl">{data?.total_confirmed ?? ""}</div>
-                </div>
-                {/* <div className="text-sm mt-6">
+          </div>
+          <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+            <div className="mb-4 space-y-6">
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Confirmed
+              </label>
+              <div className="text-3xl">{data?.total_confirmed ?? ""}</div>
+            </div>
+            {/* <div className="text-sm mt-6">
                   <FontAwesomeIcon
                     icon={faUsers}
                     className="text-green-500 mr-1"
                   />
                   Last 30 days customers count
                 </div> */}
-              </div>
-              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
-                <div className="mb-4 space-y-6">
-                  <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Delivered
-                  </label>
-                  <div className="text-3xl">{data?.total_delivered ?? ""}</div>
-                </div>
-                {/* <div className="text-sm mt-6">
+          </div>
+          <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+            <div className="mb-4 space-y-6">
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Delivered
+              </label>
+              <div className="text-3xl">{data?.total_delivered ?? ""}</div>
+            </div>
+            {/* <div className="text-sm mt-6">
                   <FontAwesomeIcon
                     icon={faUsers}
                     className="text-green-500 mr-1"
                   />
                   Last 30 days customers count
                 </div> */}
-              </div>
-              <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
-                <div className="mb-4 space-y-6">
-                  <label className="block font-medium text-gray-700 mb-1 text-lg">
-                    Cancelled
-                  </label>
-                  <div className="text-3xl">{data?.total_cancelled ?? ""}</div>
-                </div>
-                {/* <div className="text-sm mt-6">
+          </div>
+          <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+            <div className="mb-4 space-y-6">
+              <label className="block font-medium text-gray-700 mb-1 text-lg">
+                Cancelled
+              </label>
+              <div className="text-3xl">{data?.total_cancelled ?? ""}</div>
+            </div>
+            {/* <div className="text-sm mt-6">
                   <FontAwesomeIcon
                     icon={faUsers}
                     className="text-green-500 mr-1"
                   />
                   Last 30 days customers count
                 </div> */}
-              </div>
+          </div>
 
-              {/* <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
+          {/* <div className="rounded-md shadow-md p-4 bg-white w-full max-w-xs">
                 <div className="mb-4 space-y-6">
                   <label className="block font-medium text-gray-700 mb-1 text-lg">
                     Branches
@@ -180,12 +178,10 @@ export default function DashboardPage() {
                   Assigned branches
                 </div>
               </div> */}
-            </div>
+        </div>
 
-            {error && <p className="text-red-500 mt-4">{error}</p>}
-          </div>
-     
-
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+      </div>
     </>
   );
 }

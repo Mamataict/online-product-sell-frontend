@@ -295,6 +295,20 @@ const Navbar = () => {
             </div>
           )}
 
+          {hasAnyPermission(["banner.index"]) && (
+            <div>
+              <button onClick={() => toggleMenu("banner")} className="flex justify-between w-full px-4 py-3">
+                Banner
+                <FontAwesomeIcon icon={faChevronDown} className={arrowClass("banner")} />
+              </button>
+              {openMenu === "banner" && (
+                <div className="pl-6">
+                  <Link href="/dashboard/banner" className="block py-2">Banner</Link>
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
       )}
     </nav>

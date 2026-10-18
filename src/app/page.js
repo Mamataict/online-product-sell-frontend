@@ -15,8 +15,8 @@ async function getHomeData() {
   try {
     const res = await api.get("/api/home");
     return res.data?.data ?? null;
-  } catch (error) {
-    console.error("Home API error:", error?.response?.data || error.message);
+  } catch (err) {
+    
     return null;
   }
 }
@@ -105,14 +105,16 @@ export default async function Home() {
           />
           <div className="container mx-auto grid w-full grid-cols-1 items-center gap-8 px-6 py-2 sm:grid-cols-2 sm:px-10 lg:px-16 2xl:px-24">
             <div className="flex w-full flex-col items-center justify-center text-center">
-              <Image
-                src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/beef-2.jpg`}
-                alt="Dairy Fresh logo"
-                width={500}
-                height={500}
-                priority
-                className="mb-6 w-[250px] lg:w-[350px] 2xl:w-[400px]"
-              />
+              {data?.position_main && (
+                <Image
+                  src={data.position_main?.image_url}
+                  alt={data.position_main?.name}
+                  width={500}
+                  height={500}
+                  priority
+                  className="mb-6 w-[250px] lg:w-[350px] 2xl:w-[400px]"
+                />
+              )}
             </div>
 
             <div className="flex w-full items-center justify-center">
@@ -147,26 +149,28 @@ export default async function Home() {
         <ProductAdCarousel order_data={data} />
       </section>
 
-      <section className="bg-[#14261C] py-16 sm:py-24">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-            {products.map((product) => (
-              <div
-                key={product.src}
-                className="group relative aspect-[4/5] overflow-hidden rounded-sm"
-              >
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/${product.src}`}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 50vw"
-                  className="object-contain transition-transform duration-500 group-hover:scale-105"
-                  alt={product.name}
-                />
-              </div>
-            ))}
+      {data?.position_mid?.length > 0 && (
+        <section className="bg-[#14261C] py-16 sm:py-24">
+          <div className="container mx-auto px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+              {data.position_mid?.map((banner, index) => (
+                <div
+                  key={index}
+                  className="group relative aspect-[4/5] overflow-hidden rounded-sm"
+                >
+                  <Image
+                    src={banner.image_url}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                    alt={banner.name}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Order Form */}
       <section className="container mx-auto py-10" id="orders">
@@ -177,7 +181,7 @@ export default async function Home() {
           <OrderForm order_data={data} />
         </div>
       </section>
-      <FrontAdModal />
+      <FrontAdModal data={data} />
       <FabButton />
       <Footer />
     </main>
