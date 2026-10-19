@@ -33,6 +33,7 @@ export default function DueReport() {
   const [end_date, setEndDate] = useState(today.toISOString().slice(0, 10));
 
   const [orderStatus, setOrderStatus] = useState(2);
+  const [serial, setSerial] = useState(0);
 
   const fetchDueReport = async (page = 1) => {
     setLoading(true);
@@ -49,8 +50,9 @@ export default function DueReport() {
       );
 
       setDueReports(res.data?.data);
-      setCurrentPage(res.data?.data?.orders?.data?.current_page);
-      setLastPage(res.data?.data?.orders?.data?.last_page);
+      setSerial(res.data?.data?.orders?.from ?? 0);
+      setCurrentPage(res.data?.data?.orders?.current_page);
+      setLastPage(res.data?.data?.orders?.last_page);
     } catch (err) {
       setError(err?.response?.data);
     } finally {
@@ -185,6 +187,7 @@ export default function DueReport() {
         <table className="table-auto w-full text-left">
           <thead>
             <tr>
+              <th className="p-4 border-b border-gray-200">SL.</th>
               <th className="p-4 border-b border-gray-200">Date</th>
               <th className="p-4 border-b border-gray-200">Invoice</th>
               <th className="p-4 border-b border-gray-200">Customer</th>
@@ -194,8 +197,11 @@ export default function DueReport() {
             </tr>
           </thead>
           <tbody>
-            {due_reports?.orders?.data?.map((due_info) => (
+            {due_reports?.orders?.data?.map((due_info, index) => (
               <tr key={due_info.id} className="border-b border-gray-200">
+                <td className="p-4 border-b border-gray-200">
+                  {serial + index}
+                </td>
                 <td className="p-4 border-b border-gray-200">
                   {due_info.place_date.toString()}
                 </td>
