@@ -37,7 +37,7 @@ export default async function Home() {
 
   return (
     <main>
-      {/* <Navbar /> */}
+      <Navbar />
       {/* Hero */}
       {/* <section className="relative h-[650px] 2xl:h-[1000px] 3xl:h-[1500px] w-full">
         <Image
@@ -79,10 +79,10 @@ export default async function Home() {
         </div>
       </section> */}
 
-      <section className="relative min-h-[1100px] w-full overflow-hidden sm:min-h-[800px] lg:min-h-[900px] ">
+      <section className="relative min-h-[1100px] w-full overflow-hidden sm:min-h-[800px] lg:min-h-[900px] mt-25">
         {/* Background */}
         <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/bg-cover.jpg`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/milk-ghee.jpg`}
           alt="Dairy Fresh background"
           fill
           priority
@@ -90,20 +90,20 @@ export default async function Home() {
         />
 
         {/* Optional dark overlay for better readability */}
-        <div className="absolute inset-0 z-[1] bg-black/40" />
+        <div className="absolute inset-0 z-[1] bg-black/50" />
 
         {/* Content */}
 
         <div className="absolute inset-0 z-10">
-          <Image
+          {/* <Image
             src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/logo/logo-splash.png`}
             alt="Dairy Fresh logo"
             width={500}
             height={500}
             priority
             className="mb-6 w-20 sm:w-40 h-auto ml-5 mt-5 sm:ml-[30px] sm:mt-[30px]"
-          />
-          <div className="container mx-auto grid w-full grid-cols-1 items-center gap-8 px-6 py-2 sm:grid-cols-2 sm:px-10 lg:px-16 2xl:px-24">
+          /> */}
+          <div className="container mx-auto grid w-full grid-cols-1 items-center gap-8 px-6 py-25 sm:grid-cols-2 sm:px-10 lg:px-16 2xl:px-24">
             <div className="flex w-full flex-col items-center justify-center text-center">
               {data?.position_main && (
                 <Image
@@ -143,6 +143,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+   
 
       {/* Product Carousel */}
       <section className="container mx-auto my-15 h-[450px]">

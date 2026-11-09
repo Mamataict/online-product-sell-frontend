@@ -6,6 +6,7 @@ import api from "@/lib/axios";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
+import Navbar from "@/components/NavBar";
 
 const DEFAULT_IMAGE = process.env.NEXT_PUBLIC_API_URL
   ? `${process.env.NEXT_PUBLIC_API_URL}/images/default.png`
@@ -13,7 +14,7 @@ const DEFAULT_IMAGE = process.env.NEXT_PUBLIC_API_URL
 
 export default function OrderCompletedPage() {
   const [visible, setVisible] = useState(false);
- 
+
   const [order_info, setOrderInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -52,7 +53,13 @@ export default function OrderCompletedPage() {
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", padding: "80px 20px", fontFamily: "sans-serif" }}>
+      <div
+        style={{
+          textAlign: "center",
+          padding: "80px 20px",
+          fontFamily: "sans-serif",
+        }}
+      >
         অর্ডার তথ্য লোড হচ্ছে...
       </div>
     );
@@ -60,7 +67,14 @@ export default function OrderCompletedPage() {
 
   if (error || !order_info) {
     return (
-      <div style={{ textAlign: "center", padding: "80px 20px", color: "#ef4444", fontFamily: "sans-serif" }}>
+      <div
+        style={{
+          textAlign: "center",
+          padding: "80px 20px",
+          color: "#ef4444",
+          fontFamily: "sans-serif",
+        }}
+      >
         অর্ডার তথ্য লোড করতে সমস্যা হয়েছে। পেজ রিফ্রেশ করুন।
       </div>
     );
@@ -243,20 +257,25 @@ export default function OrderCompletedPage() {
         }
       `}</style>
 
-  
-
       <div className={`page ${visible ? "visible" : ""}`}>
-
         {/* Hero */}
         <div className="hero">
           <div className="checkmark-ring">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
           <div className="hero-title">অর্ডার সম্পন্ন হয়েছে! 🎉</div>
           <div className="hero-sub">
-            আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।<br />
+            আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।
+            <br />
             আমরা শীঘ্রই প্রক্রিয়া শুরু করব।
           </div>
           <div className="order-badge">
@@ -308,7 +327,9 @@ export default function OrderCompletedPage() {
           <div className="info-grid">
             <div className="info-cell">
               <div className="info-cell-label">প্রাপক</div>
-              <div className="info-cell-value">{order_info?.customer?.name}</div>
+              <div className="info-cell-value">
+                {order_info?.customer?.name}
+              </div>
             </div>
             <div className="info-cell">
               <div className="info-cell-label">পেমেন্ট</div>
@@ -316,11 +337,15 @@ export default function OrderCompletedPage() {
             </div>
             <div className="info-cell">
               <div className="info-cell-label">ঠিকানা</div>
-              <div className="info-cell-value">{order_info?.customer?.address}</div>
+              <div className="info-cell-value">
+                {order_info?.customer?.address}
+              </div>
             </div>
             <div className="info-cell">
               <div className="info-cell-label">যোগাযোগ</div>
-              <div className="info-cell-value">{order_info?.customer?.phone}</div>
+              <div className="info-cell-value">
+                {order_info?.customer?.phone}
+              </div>
             </div>
           </div>
         </div>
@@ -334,10 +359,17 @@ export default function OrderCompletedPage() {
 
         {/* Footer */}
         <div className="footer">
-          কোনো সমস্যায় <Link href="#">সাপোর্টে যোগাযোগ করুন</Link> অথবা ফোন করুন{" "}
-          <Link href="tel:8801896025050">01896025050</Link>
-          <br />
-          © {new Date().getFullYear()} <Link href="https://www.mamatabd.org" target="_blank" className="text-white hover:underline">Mamata</Link>, All right reserved.
+          কোনো সমস্যায় <Link href="#">সাপোর্টে যোগাযোগ করুন</Link> অথবা ফোন
+          করুন <Link href="tel:8801896025050">01896025050</Link>
+          <br />© {new Date().getFullYear()}{" "}
+          <Link
+            href="https://www.mamatabd.org"
+            target="_blank"
+            className="text-white hover:underline"
+          >
+            Mamata
+          </Link>
+          , All right reserved.
         </div>
       </div>
     </>

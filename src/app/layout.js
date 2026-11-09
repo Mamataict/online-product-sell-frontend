@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Dairy Fresh",
   description: "Product Sale Management System",
+  icons: {
+    icon: `${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy_fresh_logo.png`,
+  },
 };
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
