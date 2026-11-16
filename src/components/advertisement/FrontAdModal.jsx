@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProductAdCarousel from "../features_cus/ProductAdCarousel/ProductAdCarousel";
 
-const AUTO_CLOSE_SECONDS = 10;
+const AUTO_CLOSE_SECONDS = 2;
 
 export default function FrontAdModal({ data }) {
   const [isModalOpen, setIsModalOpen] = useState(data?.position_modal?.length == 0 ? false : true);

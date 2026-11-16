@@ -15,8 +15,6 @@ export default function ProductAdCarousel({
 }) {
   const products = order_data?.products_view;
 
-  console.log(products);
-
   if (!products?.length) return null;
 
   return (
