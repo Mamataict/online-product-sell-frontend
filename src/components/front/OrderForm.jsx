@@ -190,7 +190,7 @@ export default function OrderForm({ order_data }) {
                   />
 
                   <div className="w-full">
-                    <div className="font-semibold">
+                    <div className="text-xl">
                       {product.name} {product.unit}
                     </div>
 
@@ -231,7 +231,7 @@ export default function OrderForm({ order_data }) {
                         </div>
                       )}
 
-                      <div className="text-lg font-bold text-[#0F6939]">
+                      <div className="text-xl font-semibold text-[#0F6939]">
                         {Number(product.latest_price?.price || 0)} ৳
                       </div>
                     </div>
@@ -265,7 +265,7 @@ export default function OrderForm({ order_data }) {
                   />
 
                   <div className="w-full">
-                    <div className="font-semibold">
+                    <div className="text-xl">
                       {product.name} {product.unit}
                     </div>
 
@@ -306,7 +306,7 @@ export default function OrderForm({ order_data }) {
                         </div>
                       )}
 
-                      <div className="text-lg font-bold text-[#0F6939]">
+                      <div className="text-xl font-semibold text-[#0F6939]">
                         {Number(product.latest_price?.price || 0)} ৳
                       </div>
                     </div>
@@ -326,7 +326,7 @@ export default function OrderForm({ order_data }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 py-6 gap-10">
         <div>
-          <div className="text-2xl py-4 font-semibold">Billing Details</div>
+          <div className="text-2xl font-semibold py-4">Billing Details</div>
           <div className="space-y-5">
             <input
               type="text"
@@ -361,7 +361,7 @@ export default function OrderForm({ order_data }) {
             />
           </div>
 
-          <div className="text-2xl py-4 font-semibold">Shipping</div>
+          <div className="text-2xl font-semibold py-4">Shipping</div>
           <div className="space-y-3">
             {prev_item_category == "special_delivery" ? (
               <div
@@ -404,7 +404,7 @@ export default function OrderForm({ order_data }) {
         </div>
 
         <div>
-          <div className="text-2xl py-4 font-semibold">Your Order</div>
+          <div className="text-2xl font-semibold py-4">Your Order</div>
 
           {cart.length > 0 ? (
             <>
@@ -427,7 +427,7 @@ export default function OrderForm({ order_data }) {
                             Qty: {item.qty}
                           </div>
                         </td>
-                        <td className="p-4 text-right font-semibold">
+                        <td className="p-4 text-right font-medium">
                           {item.price * item.qty} ৳
                         </td>
                       </tr>
@@ -445,14 +445,14 @@ export default function OrderForm({ order_data }) {
                   <span>Shipping</span>
                   <span>{shippingCost} ৳</span>
                 </div>
-                <div className="border-t pt-3 flex justify-between text-xl font-bold">
+                <div className="border-t pt-3 flex justify-between text-xl font-semibold">
                   <span>Total</span>
                   <span>{total} ৳</span>
                 </div>
               </div>
 
               <div className="border-dotted rounded-2xl py-4">
-                <div className="text-xl font-semibold">Payment Method</div>
+                <div className="text-xl">Payment Method</div>
                 <hr />
                 <div className="bg-green-100 border-2 border-green-500 w-full rounded-2xl px-4 py-4 mt-4 flex space-x-2">
                   {/* <FontAwesomeIcon
@@ -482,14 +482,14 @@ export default function OrderForm({ order_data }) {
                     priority
                   />
                   <div>
-                    বিকাশ-{order_data.bkash}(পার্সনাল) - সেন্ড মানি করুন
+                    {order_data.bkash}
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={handleOrderConfirm}
-                className={`w-full transition font-bold text-xl py-4 mt-5 rounded-2xl flex justify-center items-center gap-3 ${"bg-yellow-400 hover:bg-yellow-500 cursor-pointer"}`}
+                className={`w-full transition text-xl font-semibold py-4 mt-5 rounded-2xl flex justify-center items-center gap-3 ${"bg-yellow-400 hover:bg-yellow-500 cursor-pointer"}`}
               >
                 <FontAwesomeIcon icon={faLock} />
                 {submitting

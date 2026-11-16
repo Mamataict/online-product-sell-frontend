@@ -63,7 +63,7 @@ export default function ProductAdCarousel({
               className={"object-cover"}
             />
             <div className="absolute bottom-0 left-0 w-full bg-black/60 p-3">
-              <h2 className="text-white text-lg font-semibold text-center">
+              <h2 className="text-white text-lg text-center">
                 {product.category_name}
               </h2>
             </div>

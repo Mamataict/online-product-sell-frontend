@@ -28,8 +28,7 @@ export default async function Home() {
     <main>
       <Navbar />
 
-      <section className="container mx-auto mt-30 my-15 h-auto">
-       
+      <section className="container mx-auto mt-30 mb-5 sm:mb-10 h-auto">
         <BannerAdCarousel order_data={data} />
         {/* <Image
           src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/background/milk-ghee.jpg`}
@@ -83,8 +82,20 @@ export default async function Home() {
           </div>
         </div> */}
       </section>
-   
-      <section className="container mx-auto my-15 h-[450px]">
+
+      <section className="container mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-5">
+          <div className="h-[2px] flex-1 bg-[#0F6939]/20"></div>
+
+          <h2 className="text-2xl md:text-3xl text-center">
+            Product Category
+          </h2>
+
+          <div className="h-[2px] flex-1 bg-[#0F6939]/20"></div>
+        </div>
+      </section>
+
+      <section className="container mx-auto my-5 sm:my-10 h-[450px]">
         <ProductAdCarousel order_data={data} />
       </section>
 
@@ -111,7 +122,7 @@ export default async function Home() {
         </section>
       )} */}
       <section className="container mx-auto py-10" id="orders">
-        <h2 className="bg-[#0F6939] text-white text-center text-2xl font-bold py-5 rounded-t-xl">
+        <h2 className="bg-[#0F6939] text-white text-center text-2xl py-5 rounded-t-xl">
           নিচের ফর্মটি পূরণ করে আপনার অর্ডার নিশ্চিত করুন
         </h2>
         <div className="border-2 border-[#0F6939] py-8 px-3 rounded-b-xl">

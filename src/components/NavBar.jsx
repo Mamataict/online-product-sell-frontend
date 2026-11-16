@@ -10,13 +10,11 @@ export default function Navbar() {
   };
 
   // Navigation items array
-  const navItems = [
-    { name: "Items", href: "#orders" },
-  ];
+  const navItems = [{ name: "Items", href: "#orders" }];
 
   return (
     <div>
-      <nav className="fixed block w-full max-w-screen px-4 py-4 mx-auto bg-white bg-opacity-90 top-0 shadow lg:px-8 backdrop-blur-lg backdrop-saturate-150 z-[9999]">
+      <nav className="fixed block w-full max-w-screen px-4 py-3 mx-auto bg-white bg-opacity-90 top-0 shadow lg:px-8 backdrop-blur-lg backdrop-saturate-150 z-[9999]">
         <div className="container flex flex-wrap items-center justify-between mx-auto text-slate-800">
           <Link
             href="/"
@@ -25,32 +23,20 @@ export default function Navbar() {
             <Image
               src={`${process.env.NEXT_PUBLIC_API_URL}/images_cus/icons/dairy_fresh_logo.png`}
               alt="Mamata BD"
-              width={50}
-              height={50}
+              width={60}
+              height={60}
               className="transition-transform duration-500"
             />
           </Link>
 
           <div className="lg:hidden">
             <button
-              className="relative ml-auto h-6 max-h-[40px] w-6 max-w-[40px] select-none rounded-lg text-center align-middle text-xs font-medium uppercase text-inherit transition-all hover:bg-transparent focus:bg-transparent active:bg-transparent disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="relative ml-auto flex h-12 w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 shrink-0 items-center justify-center rounded-lg text-inherit transition-all hover:bg-gray-100"
               onClick={toggleMobileMenu}
               type="button"
             >
-              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  ></path>
-                </svg>
+              <span className="flex items-center justify-center">
+                <Image src={'/images/menu.png'} width={300} height={300} alt="Menu" className="w-20 h-auto" />
               </span>
             </button>
           </div>
@@ -126,7 +112,6 @@ export default function Navbar() {
                   </Link>
                 </li>
               ))}
-            
             </ul>
           </div>
         </div>
