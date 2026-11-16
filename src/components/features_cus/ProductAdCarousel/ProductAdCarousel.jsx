@@ -7,8 +7,15 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./styles.css";
 
-export default function ProductAdCarousel({ order_data, custom_preview = null, custom_space = null, custom_class = null }) {
+export default function ProductAdCarousel({
+  order_data,
+  custom_preview = null,
+  custom_space = null,
+  custom_class = null,
+}) {
   const products = order_data?.products_view;
+
+  console.log(products);
 
   if (!products?.length) return null;
 
@@ -23,23 +30,45 @@ export default function ProductAdCarousel({ order_data, custom_preview = null, c
         disableOnInteraction: false,
       }}
       breakpoints={{
-        0:    { slidesPerView: custom_preview ?? 1, spaceBetween: custom_space ?? 10 },
-        640:  { slidesPerView: custom_preview ?? 1, spaceBetween: custom_space ?? 20 },
-        768:  { slidesPerView: custom_preview ?? 2, spaceBetween: custom_space ?? 40 },
-        1024: { slidesPerView: custom_preview ?? 3, spaceBetween: custom_space ?? 30 },
+        0: {
+          slidesPerView: custom_preview ?? 1,
+          spaceBetween: custom_space ?? 10,
+        },
+        640: {
+          slidesPerView: custom_preview ?? 1,
+          spaceBetween: custom_space ?? 20,
+        },
+        768: {
+          slidesPerView: custom_preview ?? 2,
+          spaceBetween: custom_space ?? 40,
+        },
+        1024: {
+          slidesPerView: custom_preview ?? 3,
+          spaceBetween: custom_space ?? 30,
+        },
       }}
     >
       {products?.map((product, index) => (
         <SwiperSlide key={product.id}>
-          <div className={`relative w-full h-full shadow-md overflow-hidden ` + (custom_class || '')}>
+          <div
+            className={
+              `relative w-full h-full shadow-md overflow-hidden ` +
+              (custom_class || "")
+            }
+          >
             <Image
               src={product.image_url}
               alt={product.name}
               width={400}
               height={400}
               loading={index === 0 ? "eager" : "lazy"}
-              className={'object-cover'}
+              className={"object-cover"}
             />
+            <div className="absolute bottom-0 left-0 w-full bg-black/60 p-3">
+              <h2 className="text-white text-lg font-semibold text-center">
+                {product.category_name}
+              </h2>
+            </div>
           </div>
         </SwiperSlide>
       ))}
