@@ -112,46 +112,6 @@ export default function OrderForm({ order_data }) {
 
     setSubmitting(true);
 
-    // const payload = {
-    //   customer: {
-    //     name: form.name,
-    //     phone: form.phone,
-    //     address: form.address,
-    //   },
-    //   shipping,
-    //   shipping_cost: shippingCost,
-    //   subtotal,
-    //   total,
-    //   products: cart.map((item) => ({
-    //     product_id: item.id,
-    //     qty: item.qty,
-    //     price: item.price,
-    //   })),
-    // };
-
-    // try {
-    //   const res = await api.post("/api/order/confirm", payload);
-
-    //   if (res.data.status === false) {
-    //     toast.error(res.data.message);
-    //     setSubmitting(false);
-    //     return;
-    //   }
-
-    //   const route = res?.data?.route;
-    //   if (!route) {
-    //     toast.error("Something went wrong. Please try again.");
-    //     setSubmitting(false);
-    //     return;
-    //   }
-
-    //   router.push(`/order/${route}`);
-    // } catch (error) {
-    //   console.error("Order error:", error?.response?.data || error.message);
-    //   toast.error("Something went wrong. Please try again.");
-    //   setSubmitting(false);
-    // }
-
     const payload = {
       customer: {
         name: form.name,
